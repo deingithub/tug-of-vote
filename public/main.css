@@ -1,0 +1,176 @@
+body {
+  color: #333;
+  font-family: "IBM Plex Sans";
+}
+
+body {
+  width: 75%;
+  margin: 0 auto;
+}
+
+body section a {
+  color: #333;
+}
+
+body h1 {
+  margin: 0 auto;
+  font-weight: normal;
+}
+
+body h1 a {
+  color: #333;
+  text-decoration: none;
+}
+
+body h1::after {
+  width: 100%;
+  height: 4px;
+  display: block;
+  content: " ";
+  background: #333;
+}
+
+body h2 {
+  margin: 2rem 0;
+}
+
+body footer p {
+  font-size: .7rem;
+  margin-top: 3rem;
+}
+
+section.content-page p {
+  max-width: 75ch;
+}
+
+div.votebar {
+  display: flex;
+  margin-bottom: 3rem;
+}
+
+div.votebar div {
+  text-align: center;
+  font-size: 2rem;
+}
+
+div.votebar div.pro {
+  background-color: #21b1ff;
+}
+
+div.votebar div.neu {
+  background-color: #ffd800;
+}
+
+div.votebar div.con {
+  background-color: #ff218c;
+}
+
+.reasons {
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+.reasons>div {
+  flex-grow: 1;
+  flex-basis: 33%;
+  padding: .3rem;
+}
+.reasons ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.reasons h2 {
+  font-weight: normal;
+  font-style: italic;
+  margin-bottom: 0;
+}
+
+.reasons blockquote {
+  margin-left: 0;
+}
+
+.reasons blockquote p {
+  margin-bottom: 0;
+}
+
+.reasons blockquote cite::before {
+  content: '— ';
+}
+
+.row {
+  display: table-row;
+}
+
+.row label, .row select, .row input, .row textarea {
+  display: table-cell;
+  margin-bottom: .3rem
+}
+
+.row label {
+  min-width: 7rem;
+}
+
+.row.textarea-row label {
+  vertical-align: top;
+}
+.row textarea {
+  width: 60ch;
+  height: 10ch;
+  font-size: .9rem;
+}
+
+.poll-actions h2 {
+  margin: .3rem 0;
+  border-bottom: 3px solid #333;
+}
+
+.poll-actions {
+  display: flex;
+  column-gap: 3rem;
+}
+
+.poll-actions div {
+  flex-basis: content;
+  min-width: 20rem;
+}
+
+
+@media screen and (max-width: 100rem) {
+  body {
+    width: 100%;
+    padding: 0 .3rem;
+    box-sizing: border-box;
+  }
+  h1 {
+    width: 100%;
+  }
+  .poll-actions div, .reasons div {
+    width: 100%;
+    min-width: unset;
+    flex-basis: unset !important;
+  }
+  .reasons, .poll-actions {
+    flex-wrap: wrap;
+  }
+  .row {
+    display: block;
+  }
+  .row label, .row select, .row textarea, .row input {
+    display: block;
+    max-width: 100%;
+  }
+}
+
+@media screen and (prefers-color-scheme: dark) {
+  * {
+    color: #f0f0f0;
+  }
+  body {
+    background-color: #16161d;
+  }
+  body article a {
+    color: #f0f0f0;
+  }
+}

@@ -1,0 +1,21 @@
+name: TugOfVote
+version: 0.1.0
+
+authors:
+  - deing <admin@15318.de>
+
+targets:
+  TugOfVote:
+    main: src/TugOfVote.cr
+
+crystal: 0.31.1
+
+license: MIT
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+  dotenv:
+    github: gdotdesign/cr-dotenv

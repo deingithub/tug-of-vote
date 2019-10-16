@@ -1,0 +1,25 @@
+<div class="vote">
+  <h2>Vote</h2>
+  <form action="/cap/<%= cap[:cap_slug] %>/vote" method="post">
+  <div class="name row">
+    <label for="name">Your name</label><input id="name" placeholder="lain" name="name">
+  </div>
+  <div class="pin row">
+    <label for="password">Your code</label><input id="password" type="password" name="password">
+  </div>
+  <div class="vote row">
+    <label for="vote">Your vote</label>
+    <select id="vote" name="vote">
+      <option value="delvote">No Vote</option>
+      <option value="infavor">In Favor</option>
+      <option value="neutral">Neutral</option>
+      <option value="against">Against</option>
+    </select>
+  </div>
+  <div class="reason row">
+    <label for="reason">Reason</label>
+    <input placeholder="Yeah I dislike it" id="reason" name="reason">
+  </div>
+  <button>Save</button>
+  </form>
+</div>

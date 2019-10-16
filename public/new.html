@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/main.css">
+  <title>Tug Of Vote</title>
+</head>
+<body>
+  <h1><a href="/">Tug Of Vote</a></h1>
+  <section>
+    <h2>Create new Poll</h2>
+    <form action="/new" method="POST">
+      <div class="row textarea-row">
+        <label for="text-content">Your Proposal:</label>
+        <textarea name="content" id="text-content"></textarea>
+      </div>
+      <button>Go!</button>
+    </form>
+  </section>
+  <footer>
+    <p>This page is best viewed using curl(1) on a screen resolution of 80×24 characters or better. Powered by Dingenskirchen Systems. View the <a href="https://github.com/deingithub/tug-of-vote">source code</a> or the <a href="/help">manual</a>.</p>
+  </footer>
+</body>
+</html>
