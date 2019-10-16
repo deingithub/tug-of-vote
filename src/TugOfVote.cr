@@ -4,6 +4,7 @@ require "db"
 require "sqlite3"
 require "dotenv"
 
+require "./Helpers"
 require "./ViewMain"
 require "./ViewCap"
 require "./ViewNew"

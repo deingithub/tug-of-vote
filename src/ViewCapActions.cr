@@ -7,20 +7,9 @@ post "/cap/:cap_slug/vote" do |env|
   reason = env.params.body["reason"].as(String)
 
   error_text = ""
-  if password.empty?
-    error_text += "Password may not be empty. "
-  end
-  # necessary due to the hashing algorithm used
-  if password.size > 70
-    error_text += "Maximum password length is 70 characters. "
-  end
-  # ruining your fun since 1661
-  if name.size > 42
-    error_text += "Maximum name length is 42 characters. "
-  end
-  if reason.size > 2000
-    error_text += "Maximum reason length is 2000 characters. "
-  end
+  error_text += validate_username(name)
+  error_text += validate_reason(reason)
+  error_text += validate_password(password)
   unless error_text.empty?
     halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
   end
@@ -61,6 +50,10 @@ post "/cap/:cap_slug/vote" do |env|
 
   # at this point we are both authorized to vote and have either a valid password or a new user
   if vote == "delvote"
+    unless has_old 
+      error_text = "You can't delete your vote if it hasn't been set before. "
+      halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr" 
+    end
     DATABASE.exec "delete from votes where poll_id = ? and username = ?", cap_data.not_nil![:poll_id], name
   else
     vote_enum = VoteKind.parse(vote)
@@ -96,5 +89,34 @@ get "/cap/:cap_slug/admin/end_voting" do |env|
   end
   DATABASE.exec "update caps set kind = 3 where kind = 4 and poll_id = ?", cap_data.not_nil![:poll_id]
   env.response.status_code = 302
+  env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
+end
+
+post "/cap/:cap_slug/admin/update_content" do |env|
+  content = env.params.body["content"].as(String)
+  error_text = ""
+  error_text += validate_content(content)
+  unless error_text.empty?
+    halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
+  end
+  # fetch relevant cap and ensure we're allowed to administrate
+  cap_data = nil
+  rs = DATABASE.query "select poll_id, kind from caps where cap_slug = ?", env.params.url["cap_slug"]
+  if rs.move_next
+    cap_row = rs.read(poll_id: Int64, kind: Int64)
+    cap_data = {poll_id: cap_row[:poll_id], kind: CapKind.from_value(cap_row[:kind])}
+    if cap_data[:kind] != CapKind::Admin
+      rs.close
+      error_text = "Unauthorized. "
+      halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    end
+    rs.close
+  else
+    rs.close
+    error_text = "Unauthorized. "
+    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+  end
+  DATABASE.exec "update polls set content = ? where id = ?", content, cap_data.not_nil![:poll_id]
+  env.response.status_code = 303
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end

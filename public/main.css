@@ -130,6 +130,15 @@ div.votebar div.con {
   vertical-align: top;
 }
 
+form > label {
+  display: block;
+}
+form > textarea {
+  width: 100%;
+  height: 10ch;
+  font-size: .9rem;
+}
+
 .row textarea {
   width: 60ch;
   height: 10ch;

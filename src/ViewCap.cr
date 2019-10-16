@@ -82,6 +82,12 @@ def gen_admin(cap)
   if CapKind.from_value(cap[:kind]) != CapKind::Admin
     return ""
   end
+  content = DATABASE.query "select content from polls where id = ?", cap[:poll_id] do |rs|
+    rs.move_next
+    # FIXME this ugly .to_s thing is necessary to avoid an exception in case the string value
+    # can be interpreted as an integer, which for some reason takes precedence
+    next rs.read.to_s
+  end
   render "src/ecr/cap_component_admin.ecr"
 end
 

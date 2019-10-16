@@ -1,12 +1,7 @@
 post "/new" do |env|
   content = env.params.body["content"].as(String)
   error_text = ""
-  if content.empty?
-    error_text += "Poll content may not be empty. "
-  end
-  if content.size > 20000
-    error_text += "Maximum content length for polls is 20000 characters, you are #{content.size - 20000} characters above the limit. "
-  end
+  error_text += validate_content(content)
   unless error_text.empty?
     halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
   end
