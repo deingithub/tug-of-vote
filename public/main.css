@@ -21,7 +21,7 @@ body {
   margin: 0 auto;
 }
 
-body section a {
+body a {
   color: #333;
 }
 
@@ -193,7 +193,16 @@ form > textarea {
   body {
     background-color: #16161d;
   }
-  body article a {
-    color: #f0f0f0;
+  body h1::after {
+    background-color: #f0f0f0;
+  }
+  body .poll-actions h2 {
+    border-color: #f0f0f0;
+  }
+  a {
+    color: #f0f0f0 !important;
+  }
+  .poll-results div {
+    color: #16161d;
   }
 }
