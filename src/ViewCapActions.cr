@@ -6,19 +6,23 @@ post "/cap/:cap_slug/vote" do |env|
   vote = env.params.body["vote"].as(String)
   reason = env.params.body["reason"].as(String)
 
+  error_text = ""
   if password.empty?
-    halt env, status_code: 400, response: "Password may not be empty"
+    error_text += "Password may not be empty. "
   end
   # necessary due to the hashing algorithm used
   if password.size > 70
-    halt env, status_code: 400, response: "Maximum password length is 70 characters"
+    error_text += "Maximum password length is 70 characters. "
   end
   # ruining your fun since 1661
   if name.size > 42
-    halt env, status_code: 400, response: "Maximum name length is 42 characters"
+    error_text += "Maximum name length is 42 characters. "
   end
   if reason.size > 2000
-    halt env, status_code: 400, response: "Maximum reason length is 2000 characters"
+    error_text += "Maximum reason length is 2000 characters. "
+  end
+  unless error_text.empty?
+    halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
   end
 
   # fetch relevant cap and ensure we're allowed to vote
@@ -29,12 +33,14 @@ post "/cap/:cap_slug/vote" do |env|
     cap_data = {poll_id: cap_row[:poll_id], kind: CapKind.from_value(cap_row[:kind])}
     if cap_data[:kind] != CapKind::Vote && cap_data[:kind] != CapKind::Admin
       rs.close
-      halt env, status_code: 403, response: "Unauthorized"
+      error_text = "Unauthorized. "
+      halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
     end
     rs.close
   else
     rs.close
-    halt env, status_code: 403, response: "Unauthorized"
+    error_text = "Unauthorized. "
+    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
   end
 
   # if an older vote exists, check password before continuing
@@ -44,13 +50,16 @@ post "/cap/:cap_slug/vote" do |env|
     db_password = rs.read(String)
     authorized = Crypto::Bcrypt::Password.new(db_password).verify(password)
     rs.close
-    halt env, status_code: 403, response: "Unauthorized" unless authorized
+    unless authorized
+      error_text = "Unauthorized. "
+      halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    end
     has_old = true
   else
     rs.close
   end
 
-  # at this point we are both authorized to vote and either a valid password or a new user
+  # at this point we are both authorized to vote and have either a valid password or a new user
   if vote == "delvote"
     DATABASE.exec "delete from votes where poll_id = ? and username = ?", cap_data.not_nil![:poll_id], name
   else
@@ -76,12 +85,14 @@ get "/cap/:cap_slug/admin/end_voting" do |env|
     cap_data = {poll_id: cap_row[:poll_id], kind: CapKind.from_value(cap_row[:kind])}
     if cap_data[:kind] != CapKind::Admin
       rs.close
-      halt env, status_code: 403, response: "Unauthorized"
+      error_text = "Unauthorized. "
+      halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
     end
     rs.close
   else
     rs.close
-    halt env, status_code: 403, response: "Unauthorized"
+    error_text = "Unauthorized. "
+    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
   end
   DATABASE.exec "update caps set kind = 3 where kind = 4 and poll_id = ?", cap_data.not_nil![:poll_id]
   env.response.status_code = 302

@@ -57,7 +57,7 @@ def gen_view(cap)
 end
 
 def gen_vote(cap)
-  # return early if unauthorized
+  # return early if Unauthorized. 
   if CapKind.from_value(cap[:kind]) != CapKind::Vote && CapKind.from_value(cap[:kind]) != CapKind::Admin
     return ""
   end
@@ -65,7 +65,7 @@ def gen_vote(cap)
 end
 
 def gen_admin(cap)
-  # return early if unauthorized
+  # return early if Unauthorized. 
   if CapKind.from_value(cap[:kind]) != CapKind::Admin
     return ""
   end
