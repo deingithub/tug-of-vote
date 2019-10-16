@@ -62,4 +62,4 @@ enum VoteKind
   InFavor =  1
 end
 
-Kemal.run
+Kemal.run ENV["PORT"].to_i
