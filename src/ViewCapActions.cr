@@ -45,7 +45,7 @@ post "/cap/:cap_slug/vote" do |env|
 
   # if an older vote exists, check password before continuing
   has_old = false
-  rs = DATABASE.query "select password from votes where username = ?", name
+  rs = DATABASE.query "select password from votes where poll_id = ? and username = ?", cap_data.not_nil![:poll_id], name
   if rs.move_next
     db_password = rs.read(String)
     authorized = Crypto::Bcrypt::Password.new(db_password).verify(password)
