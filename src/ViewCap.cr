@@ -25,10 +25,10 @@ end
 
 def gen_result(res)
   og_desc = ""
-  case CapKind.from_value(result[:kind])
-  when Admin
+  case CapKind.from_value(res[:kind])
+  when CapKind::Admin
     og_desc = "You were supposed to keep this link private, s m h"
-  when Vote
+  when CapKind::Vote
     og_desc = "Participate in this poll on Tug of Vote"
   else
     og_desc = "View this poll on Tug of Vote"
