@@ -1,6 +1,6 @@
 <h2>Status</h2>
 
-<p><b>The Proposal: </b><%= poll[:content] %></p>
+<p><b>The Proposal: </b><%= HTML.escape(poll[:content]) %></p>
 
 <section class="reasons">
 <%- [{pro_votes, "In Favor"}, {neu_votes, "Neutral"}, {con_votes, "Against"}].each do |votes, display_name| -%>
