@@ -44,13 +44,17 @@ def gen_view(cap)
   # get the relevant poll
   poll = DATABASE.query "select created_at, content from polls where id = ?", cap[:poll_id] do |rs|
     rs.move_next
-    next rs.read(created_at: String, content: String)
+    # FIXME this ugly .to_s thing is necessary to avoid an exception in case the string value
+    # can be interpreted as an integer, which for some reason takes precedence
+    next {created_at: rs.read(String), content: rs.read.to_s}
   end
   # get all votes
   votes = [] of {kind: Int64, username: String, reason: String}
   DATABASE.query "select kind, username, reason from votes where poll_id = ?", cap[:poll_id] do |rs|
     rs.each do
-      votes << rs.read(kind: Int64, username: String, reason: String)
+      # FIXME this ugly .to_s thing is necessary to avoid an exception in case the string value
+      # can be interpreted as an integer, which for some reason takes precedence
+      votes << {kind: rs.read(Int64), username: rs.read.to_s, reason: rs.read.to_s}
     end
   end
 
