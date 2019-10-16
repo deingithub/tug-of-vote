@@ -24,6 +24,15 @@ def gen_404(env)
 end
 
 def gen_result(res)
+  og_desc = ""
+  case CapKind.from_value(result[:kind])
+  when Admin
+    og_desc = "You were supposed to keep this link private, s m h"
+  when Vote
+    og_desc = "Participate in this poll on Tug of Vote"
+  else
+    og_desc = "View this poll on Tug of Vote"
+  end
   view_component = gen_view(res)
   meta_component = gen_meta(res)
   vote_component = gen_vote(res)
@@ -57,7 +66,7 @@ def gen_view(cap)
 end
 
 def gen_vote(cap)
-  # return early if Unauthorized. 
+  # return early if Unauthorized.
   if CapKind.from_value(cap[:kind]) != CapKind::Vote && CapKind.from_value(cap[:kind]) != CapKind::Admin
     return ""
   end
@@ -65,7 +74,7 @@ def gen_vote(cap)
 end
 
 def gen_admin(cap)
-  # return early if Unauthorized. 
+  # return early if Unauthorized.
   if CapKind.from_value(cap[:kind]) != CapKind::Admin
     return ""
   end

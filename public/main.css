@@ -3,6 +3,19 @@ body {
   font-family: "IBM Plex Sans";
 }
 
+@font-face {
+  src: url("IBMPlexSans-Regular.woff2");
+  font-family: "IBM Plex Sans";
+  font-weight: normal;
+}
+
+@font-face {
+  src: url("IBMPlexSans-Italic.woff2");
+  font-family: "IBM Plex Sans";
+  font-weight: normal;
+  font-style: italic;
+}
+
 body {
   width: 75%;
   margin: 0 auto;
@@ -75,6 +88,7 @@ div.votebar div.con {
   flex-basis: 33%;
   padding: .3rem;
 }
+
 .reasons ul {
   list-style: none;
   margin: 0;
@@ -115,6 +129,7 @@ div.votebar div.con {
 .row.textarea-row label {
   vertical-align: top;
 }
+
 .row textarea {
   width: 60ch;
   height: 10ch;
@@ -135,7 +150,6 @@ div.votebar div.con {
   flex-basis: content;
   min-width: 20rem;
 }
-
 
 @media screen and (max-width: 100rem) {
   body {
