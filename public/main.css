@@ -124,6 +124,7 @@ div.votebar div.con {
 
 .row label {
   min-width: 7rem;
+  padding-right: .3rem;
 }
 
 .row.textarea-row label {
