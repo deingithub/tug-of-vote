@@ -20,32 +20,25 @@ post "/cap/:cap_slug/poll/vote" do |env|
     halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
   end
 
-  # if an older vote exists, check password before continuing
-  has_old = false
-  rs = DATABASE.query "select password from votes where poll_id = ? and username = ?", cap_data.poll_id, name
-  if rs.move_next
-    db_password = rs.read(String)
-    authorized = Crypto::Bcrypt::Password.new(db_password).verify(password)
-    rs.close
+  votes = DATABASE.query_all("select * from votes where poll_id = ? and username = ?", cap_data.poll_id, name, as: Vote)
+  unless votes.empty?
+    authorized = Crypto::Bcrypt::Password.new(votes[0].password).verify(password)
     unless authorized
-      error_text = "Unauthorized. "
+      error_text = "Invalid Password. "
       halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
     end
-    has_old = true
-  else
-    rs.close
   end
 
   # at this point we are both authorized to vote and have either a valid password or a new user
   if vote == "delvote"
-    unless has_old
+    if votes.empty?
       error_text = "You can't delete your vote if it hasn't been set before. "
       halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
     end
     DATABASE.exec "delete from votes where poll_id = ? and username = ?", cap_data.poll_id, name
   else
     vote_enum = VoteKind.parse(vote)
-    if has_old
+    unless votes.empty?
       DATABASE.exec "update votes set kind = ?, reason = ?, created_at = current_timestamp where poll_id = ? and username = ?", vote_enum.value, reason, cap_data.poll_id, name
     else
       hashed_password = Crypto::Bcrypt::Password.create(password).to_s

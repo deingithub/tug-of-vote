@@ -5,9 +5,9 @@
 
   <form action="/cap/<%= cap.cap_slug %>/poll/update" method="post">
     <label for="edit-poll-title">Edit title</label>
-    <input id="edit-poll-title" name="title" value="<%= poll.title %>">
+    <input id="edit-poll-title" name="title" value="<%= poll.title %>" required maxlength="200">
     <label for="edit-poll-textarea">Edit proposal</label>
-    <textarea id="edit-poll-textarea" name="description"><%= poll.description %></textarea>
+    <textarea id="edit-poll-textarea" name="description" required maxlength="20000"><%= poll.description %></textarea>
     <button>Update poll</button>
   </form>
 </div>

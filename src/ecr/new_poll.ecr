@@ -22,11 +22,11 @@
       <%- end -%>
       <div class="row">
         <label for="title">Title:</label>
-        <input name="title" id="title">
+        <input name="title" id="title" required maxlength="200">
       </div>
       <div class="row textarea-row">
         <label for="text-description">Your Proposal:</label>
-        <textarea name="description" id="text-description"></textarea>
+        <textarea name="description" id="text-description" required maxlength="20000"></textarea>
       </div>
       <button>Go!</button>
     </form>

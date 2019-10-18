@@ -53,15 +53,15 @@
           <h2>Admin</h2>
           <form action="/cap/<%= cap.cap_slug %>/list/update" method="post">
             <label for="edit-poll-title">Edit title</label>
-            <input id="edit-poll-title" name="title" value="<%= list.title %>">
+            <input id="edit-poll-title" name="title" value="<%= list.title %>" required maxlength="200">
             <label for="edit-poll-textarea">Edit description</label>
-            <textarea id="edit-poll-textarea" name="description"><%= list.description %></textarea>
+            <textarea id="edit-poll-textarea" name="description" required maxlength="20000"><%= list.description %></textarea>
             <button>Update list</button>
           </form>
           <p></p>
           <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">
             <label for="cap_url">Link</label>
-            <input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url">
+            <input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url" pattern="(<%= BASE_URL%>/cap/)?[a-zA-Z0-9\-_]+">
             <div></div> <!-- ugly but works to force the button into the next row-->
             <button>Append to List</button>
           </form>
