@@ -165,6 +165,10 @@ form > textarea {
   min-width: 20rem;
 }
 
+li.add-to-list {
+  margin-top: 1.3rem;
+}
+
 @media screen and (max-width: 100rem) {
   body {
     width: 100%;

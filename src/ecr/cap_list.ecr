@@ -24,6 +24,11 @@
           <%- end -%>
         </li>
       <%- end -%>
+      <%- if cap.kind == CapKind::ListAdmin -%>
+        <li class="add-to-list">
+          <a href="/new?list=<%= cap.cap_slug %>">Add a new poll to this list…</a>
+        </li>
+      <%- end -%>
     </ul>
     </section>
     <section class="poll-actions">

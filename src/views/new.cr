@@ -8,13 +8,22 @@ post "/new" do |env|
     halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
   end
   admin_cap = make_cap()
+  vote_cap = make_cap()
   DATABASE.transaction do |tx|
     c = tx.connection
     poll_id = c.exec("insert into polls (title, description) values (?, ?)", title, description).last_insert_id
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", admin_cap, CapKind::PollAdmin.value, poll_id)
-    c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollVote.value, poll_id)
+    c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", vote_cap, CapKind::PollVote.value, poll_id)
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollView.value, poll_id)
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollViewAnon.value, poll_id)
+  end
+
+  list_param = env.params.body["listcap"]?
+  if list_param
+    list_cap = fetch_cap(list_param)
+    if list_cap && list_cap.kind == CapKind::ListAdmin
+      DATABASE.exec("insert into list_entries (cap_slug, list_id) values (?,?)", vote_cap, list_cap.list_id)
+    end
   end
 
   env.response.status_code = 303

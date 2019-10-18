@@ -13,7 +13,13 @@
   <h1><a href="/">Tug Of Vote</a></h1>
   <section>
     <h2>Create new Poll</h2>
+    <%- if list_cap -%>
+      <p>The vote link to this poll will be automatically added to the list <a href="/cap/<%= list_cap.cap_slug %>"><%= list.not_nil!.title %></a>.
+    <%- end -%>
     <form action="/new" method="POST">
+      <%- if list_cap -%>
+        <input type="hidden" name="listcap" value="<%= list_cap.cap_slug %>">
+      <%- end -%>
       <div class="row">
         <label for="title">Title:</label>
         <input name="title" id="title">
