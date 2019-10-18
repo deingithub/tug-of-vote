@@ -8,6 +8,7 @@ def gen_poll(res)
   else
     og_desc = "View this poll on Tug of Vote"
   end
+  poll = DATABASE.query_all("select * from polls where id = ?", res.poll_id, as: Poll)[0]
   view_component = gen_view(res)
   meta_component = gen_meta(res)
   vote_component = gen_vote(res)

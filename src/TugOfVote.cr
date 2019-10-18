@@ -55,6 +55,23 @@ enum CapKind
     end
   end
 
+  def to_verb
+    case self
+    when PollAdmin
+      "Administrate Poll"
+    when PollVote
+      "Vote on"
+    when PollVoteDisabled, PollView, PollViewAnon
+      "View Poll"
+    when ListAdmin
+      "Administrate List"
+    when ListView
+      "View List"
+    when Revoked
+      "(Revoked)"
+    end
+  end
+
   def self.from_rs(rs)
     self.from_value(rs.read(Int64))
   end
