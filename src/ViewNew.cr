@@ -1,5 +1,5 @@
 post "/new" do |env|
-  content = env.params.body["content"].as(String)
+  content = HTML.escape(env.params.body["content"].as(String))
   error_text = ""
   error_text += validate_content(content)
   unless error_text.empty?
