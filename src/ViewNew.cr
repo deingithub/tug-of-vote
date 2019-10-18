@@ -6,11 +6,14 @@ post "/new" do |env|
     halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
   end
   admin_cap = make_cap()
-  poll_id = DATABASE.exec("insert into polls (content) values (?)", content).last_insert_id
-  DATABASE.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", admin_cap, CapKind::Admin.value, poll_id)
-  DATABASE.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::Vote.value, poll_id)
-  DATABASE.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::View.value, poll_id)
-  DATABASE.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::ViewAnon.value, poll_id)
+  DATABASE.transaction do |tx|
+    c = tx.connection
+    poll_id = c.exec("insert into polls (content) values (?)", content).last_insert_id
+    c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", admin_cap, CapKind::PollAdmin.value, poll_id)
+    c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollVote.value, poll_id)
+    c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollView.value, poll_id)
+    c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollViewAnon.value, poll_id)
+  end
 
   env.response.status_code = 303
   env.response.headers.add("Location", "/cap/#{admin_cap}")
