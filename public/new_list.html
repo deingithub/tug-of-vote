@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/main.css">
+  <meta property="og:title" content="Tug of Vote" />
+  <meta property="og:type" content="website" />
+  <meta property="og:description" content="Tug of Vote, a poll service."/>
+  <title>Tug Of Vote</title>
+</head>
+<body>
+  <h1><a href="/">Tug Of Vote</a></h1>
+  <section>
+    <h2>Create new List</h2>
+    <form action="/new_list" method="POST">
+      <div class="row">
+        <label for="title">Title:</label>
+        <input name="title" id="title">
+      </div>
+      <div class="row textarea-row">
+        <label for="text-description">About this list:</label>
+        <textarea name="description" id="text-description"></textarea>
+      </div>
+      <button>Go!</button>
+    </form>
+  </section>
+  <footer>
+    <p>This page is best viewed using curl(1) on a screen resolution of 80×24 characters or better. Uses IBM Plex Sans (<a href="/ofl.txt">License</a>). Brought to you by <a href="https://15318.de">Dingenskirchen Systems</a>. View the <a href="https://github.com/deingithub/tug-of-vote">source code</a> or the <a href="/help">manual</a>.</p>
+  </footer>
+</body>
+</html>

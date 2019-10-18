@@ -8,7 +8,6 @@ require "./Helpers"
 require "./ViewMain"
 require "./ViewCap"
 require "./ViewNew"
-require "./ViewCapActions"
 
 Dotenv.load!
 
@@ -28,6 +27,10 @@ DATABASE = DB.open "sqlite3:./tugofvote.db"
 DATABASE.exec "PRAGMA foreign_keys = ON"
 
 enum CapKind
+  # Administrate List
+  ListAdmin = 7
+  # View List
+  ListView = 6
   # Administrate poll, disable voting etc.
   PollAdmin = 5
   # Vote and add opinions
@@ -53,6 +56,12 @@ enum CapKind
       "View"
     when PollViewAnon
       "View (anonymized)"
+    when ListAdmin
+      "Administrate List"
+    when ListView
+      "View List"
+    when Revoked
+      "(Revoked)"
     end
   end
 end
