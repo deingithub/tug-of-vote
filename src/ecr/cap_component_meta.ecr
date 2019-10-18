@@ -1,15 +1,15 @@
 <div class="meta">
   <h2>Meta</h2>
   <p>
-    Created at <%= poll[:created_at] %>.<br>
-    <%- if cap[:kind] == CapKind::PollDisabledVote.value -%>
+    Created at <%= poll.created_at %>.<br>
+    <%- if cap.kind == CapKind::PollVoteDisabled -%>
     Voting has ended. You can only view the results now.<br>
     <%- end -%>
     <%= 
       lower_caps
-      .sort_by{|cap| cap[:kind] }
+      .sort_by{|cap| cap.kind }
       .reverse
-      .map {|cap| "<a href=\"/cap/#{cap[:cap_slug]}\">#{cap[:kind_str]}</a>" }
+      .map {|cap| "<a href=\"/cap/#{cap.cap_slug}\">#{cap.kind}</a>" }
       .join(" · ")
     %>
     <br>

@@ -1,6 +1,6 @@
-<h2><%= poll[:title] %></h2>
+<h2><%= poll.title %></h2>
 
-<p><b>The Proposal: </b><%= poll[:description] %></p>
+<p><b>The Proposal: </b><%= poll.description %></p>
 
 <section class="reasons">
 <%- [{pro_votes, "In Favor"}, {neu_votes, "Neutral"}, {con_votes, "Against"}].each do |votes, display_name| -%>
@@ -8,25 +8,25 @@
   <h2><%= votes.size %> <%= display_name %></h2>
   <ul>
     <%- votes.each do |vote| -%>
-      <%- unless vote[:reason].empty? -%>
+      <%- unless vote.reason.empty? -%>
         <li>
           <blockquote>
-            <p><%= vote[:reason] %></p>
-            <cite><%= anonymize ? "[REDACTED]" : vote[:username] %></cite>
+            <p><%= vote.reason %></p>
+            <cite><%= anonymize ? "[REDACTED]" : vote.username %></cite>
           </blockquote>
         </li>
       <%- end -%>
     <%- end -%>
-    <%- unless votes.select {|x| x[:reason].empty? }.empty? -%>
+    <%- unless votes.select {|x| x.reason.empty? }.empty? -%>
       <%- if anonymize -%>
         <li>
           <p>
-          No reason specified: <%= votes.select {|x| x[:reason].empty? }.size %>
-          other<%= votes.select {|x| x[:reason].empty? }.size > 1 ? "s" : "" %>
+          No reason specified: <%= votes.select {|x| x.reason.empty? }.size %>
+          other<%= votes.select {|x| x.reason.empty? }.size > 1 ? "s" : "" %>
           </p>
         </li>
       <%- else -%>
-        <li><p>No reason specified: <i><%= votes.select {|x| x[:reason].empty? }.map{ |x| x[:username] }.join(", ") %></i></p></li>
+        <li><p>No reason specified: <i><%= votes.select {|x| x.reason.empty? }.map{ |x| x.username }.join(", ") %></i></p></li>
       <%- end -%>
     <%- end -%>
   </ul>

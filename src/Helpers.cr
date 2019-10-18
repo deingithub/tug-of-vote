@@ -31,16 +31,10 @@ def validate_title(str)
 end
 
 def fetch_cap(cap_slug)
-  arr = DATABASE.query_all(
-    "select cap_slug, list_id, poll_id, kind from caps where cap_slug = ?",
-    cap_slug,
-    as: {cap_slug: String, list_id: Int64?, poll_id: Int64?, kind: Int64}
-  )
+  arr = DATABASE.query_all("select * from caps where cap_slug = ?", cap_slug, as: Cap)
   if arr.empty?
     return nil
   else
-    return arr.map { |entry|
-      next entry.merge({kind: CapKind.from_value(entry[:kind])})
-    }[0]
+    return arr[0]
   end
 end

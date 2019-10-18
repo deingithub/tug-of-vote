@@ -12,15 +12,15 @@
 <body>
   <h1><a href="/">Tug Of Vote</a></h1>
   <section class="cap-list">
-    <h2><%= list[:title] %></h2>
-    <p><b>About this list: </b><%= list[:description] %></p>
+    <h2><%= list.title %></h2>
+    <p><b>About this list: </b><%= list.description %></p>
     <ul>
-      <%- caps.each do |entry| -%>
+      <%- caps.each do |(entry_cap, entry_val)| -%>
         <li>
-          <a href="/cap/<%= entry[:cap_slug] %>"><%= entry[:kind] %></a>:
-          <%= entry[:display_name] %>
-          <%- if cap_kind == CapKind::ListAdmin -%>
-          <a href="/cap/<%= cap[:cap_slug] %>/list/remove/<%= entry[:cap_slug] %>" class="danger">[remove]</a>
+          <a href="/cap/<%= entry_cap.cap_slug %>"><%= entry_cap.kind %></a>:
+          <%= entry_val.title %>
+          <%- if cap.kind == CapKind::ListAdmin -%>
+          <a href="/cap/<%= cap.cap_slug %>/list/remove/<%= entry_cap.cap_slug %>" class="danger">[remove]</a>
           <%- end -%>
         </li>
       <%- end -%>
@@ -30,12 +30,12 @@
       <div>
         <h2>Meta</h2>
         <p>
-          Created at <%= list[:created_at] %>.<br>
+          Created at <%= list.created_at %>.<br>
           <%= 
             lower_caps
-            .sort_by{|cap| cap[:kind] }
+            .sort_by{|cap| cap.kind }
             .reverse
-            .map {|cap| "<a href=\"/cap/#{cap[:cap_slug]}\">#{cap[:kind_str]}</a>" }
+            .map {|cap| "<a href=\"/cap/#{cap.cap_slug}\">#{cap.kind}</a>" }
             .join(" · ")
           %>
         <br>
@@ -43,21 +43,21 @@
         </p>
       </div>
 
-      <%- if cap_kind == CapKind::ListAdmin -%>
+      <%- if cap.kind == CapKind::ListAdmin -%>
         <div>
           <h2>Admin</h2>
-          <form action="/cap/<%= cap[:cap_slug] %>/list/append" method="POST">
+          <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">
             <div class="row">
               <label for="cap_url">Resource</label><input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url">
             </div>
             <button>Append to List</button>
           </form>
           <p></p>
-          <form action="/cap/<%= cap[:cap_slug] %>/list/update" method="post">
+          <form action="/cap/<%= cap.cap_slug %>/list/update" method="post">
             <label for="edit-poll-title">Edit title</label>
-            <input id="edit-poll-title" name="title" value="<%= list[:title] %>">
+            <input id="edit-poll-title" name="title" value="<%= list.title %>">
             <label for="edit-poll-textarea">Edit description</label>
-            <textarea id="edit-poll-textarea" name="description"><%= list[:description] %></textarea>
+            <textarea id="edit-poll-textarea" name="description"><%= list.description %></textarea>
             <button>Update list</button>
           </form>
         </div>

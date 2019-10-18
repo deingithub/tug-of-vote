@@ -1,13 +1,13 @@
 <div class="admin">
   <h2>Admin</h2>
   
-  <p><a href="/cap/<%= cap[:cap_slug] %>/poll/end_voting" class="danger">End voting</a></p>
+  <p><a href="/cap/<%= cap.cap_slug %>/poll/end_voting" class="danger">End voting</a></p>
 
-  <form action="/cap/<%= cap[:cap_slug] %>/poll/update" method="post">
+  <form action="/cap/<%= cap.cap_slug %>/poll/update" method="post">
     <label for="edit-poll-title">Edit title</label>
-    <input id="edit-poll-title" name="title" value="<%= poll_texts[:title] %>">
+    <input id="edit-poll-title" name="title" value="<%= poll.title %>">
     <label for="edit-poll-textarea">Edit proposal</label>
-    <textarea id="edit-poll-textarea" name="description"><%= poll_texts[:description] %></textarea>
+    <textarea id="edit-poll-textarea" name="description"><%= poll.description %></textarea>
     <button>Update poll</button>
   </form>
 </div>
