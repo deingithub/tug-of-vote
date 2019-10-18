@@ -51,19 +51,19 @@
       <%- if cap.kind == CapKind::ListAdmin -%>
         <div>
           <h2>Admin</h2>
-          <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">
-            <label for="cap_url">Link</label>
-            <input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url">
-            <div></div> <!-- ugly but works to force the button into the next row-->
-            <button>Append to List</button>
-          </form>
-          <p></p>
           <form action="/cap/<%= cap.cap_slug %>/list/update" method="post">
             <label for="edit-poll-title">Edit title</label>
             <input id="edit-poll-title" name="title" value="<%= list.title %>">
             <label for="edit-poll-textarea">Edit description</label>
             <textarea id="edit-poll-textarea" name="description"><%= list.description %></textarea>
             <button>Update list</button>
+          </form>
+          <p></p>
+          <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">
+            <label for="cap_url">Link</label>
+            <input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url">
+            <div></div> <!-- ugly but works to force the button into the next row-->
+            <button>Append to List</button>
           </form>
         </div>
       <%- end -%>
