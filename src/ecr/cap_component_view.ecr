@@ -2,6 +2,12 @@
 
 <p><b>The Proposal: </b><%= poll.description %></p>
 
+<div class="votebar">
+  <div class="pro" title="Votes cast in favor" style="flex-grow: <%= pro_votes.size %>;">+</div>
+  <div class="neu" title="Neutral votes cast" style="flex-grow: <%= neu_votes.size %>;">~</div>
+  <div class="con" title="Votes cast against" style="flex-grow: <%= con_votes.size %>;">-</div>
+</div>
+
 <section class="reasons">
 <%- [{pro_votes, "In Favor"}, {neu_votes, "Neutral"}, {con_votes, "Against"}].each do |votes, display_name| -%>
   <div>
@@ -33,9 +39,3 @@
   </div>
 <%- end -%>
 </section>
-
-<div class="votebar">
-  <div class="pro" title="Votes cast in favor" style="flex-grow: <%= pro_votes.size %>;">+</div>
-  <div class="neu" title="Neutral votes cast" style="flex-grow: <%= neu_votes.size %>;">~</div>
-  <div class="con" title="Votes cast against" style="flex-grow: <%= con_votes.size %>;">-</div>
-</div>
