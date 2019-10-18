@@ -2,7 +2,7 @@
   <h2>Meta</h2>
   <p>
     Created at <%= poll[:created_at] %>.<br>
-    <%- if cap[:kind] == CapKind::DisabledVote.value -%>
+    <%- if cap[:kind] == CapKind::PollDisabledVote.value -%>
     Voting has ended. You can only view the results now.<br>
     <%- end -%>
     <%= 

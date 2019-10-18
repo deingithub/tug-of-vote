@@ -47,6 +47,10 @@ body h2 {
   margin: 2rem 0;
 }
 
+.danger {
+  color: #e00000;
+}
+
 body footer p {
   font-size: .7rem;
   margin-top: 3rem;
@@ -205,5 +209,8 @@ form > textarea {
   }
   .poll-results div {
     color: #16161d;
+  }
+  .danger {
+    color: #ff0050 !important;
   }
 }

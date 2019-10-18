@@ -14,9 +14,13 @@
   <section>
     <h2>Create new Poll</h2>
     <form action="/new" method="POST">
+      <div class="row">
+        <label for="title">Title:</label>
+        <input name="title" id="title">
+      </div>
       <div class="row textarea-row">
-        <label for="text-content">Your Proposal:</label>
-        <textarea name="content" id="text-content"></textarea>
+        <label for="text-description">Your Proposal:</label>
+        <textarea name="description" id="text-description"></textarea>
       </div>
       <button>Go!</button>
     </form>

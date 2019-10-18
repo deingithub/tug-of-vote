@@ -1,6 +1,6 @@
-<h2>Status</h2>
+<h2><%= poll[:title] %></h2>
 
-<p><b>The Proposal: </b><%= HTML.escape(poll[:content]) %></p>
+<p><b>The Proposal: </b><%= poll[:description] %></p>
 
 <section class="reasons">
 <%- [{pro_votes, "In Favor"}, {neu_votes, "Neutral"}, {con_votes, "Against"}].each do |votes, display_name| -%>
@@ -11,8 +11,8 @@
       <%- unless vote[:reason].empty? -%>
         <li>
           <blockquote>
-            <p><%= HTML.escape(vote[:reason]) %></p>
-            <cite><%= anonymize ? "[REDACTED]" : HTML.escape(vote[:username]) %></cite>
+            <p><%= vote[:reason] %></p>
+            <cite><%= anonymize ? "[REDACTED]" : vote[:username] %></cite>
           </blockquote>
         </li>
       <%- end -%>
@@ -26,7 +26,7 @@
           </p>
         </li>
       <%- else -%>
-        <li><p>No reason specified: <i><%= votes.select {|x| x[:reason].empty? }.map{ |x| HTML.escape(x[:username]) }.join(", ") %></i></p></li>
+        <li><p>No reason specified: <i><%= votes.select {|x| x[:reason].empty? }.map{ |x| x[:username] }.join(", ") %></i></p></li>
       <%- end -%>
     <%- end -%>
   </ul>

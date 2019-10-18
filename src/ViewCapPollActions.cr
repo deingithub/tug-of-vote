@@ -1,10 +1,10 @@
 require "crypto/bcrypt/password"
 
-post "/cap/:cap_slug/vote" do |env|
-  name = env.params.body["name"].as(String)
-  password = env.params.body["password"].as(String)
-  vote = env.params.body["vote"].as(String)
-  reason = env.params.body["reason"].as(String)
+post "/cap/:cap_slug/poll/vote" do |env|
+  name = HTML.escape(env.params.body["name"].as(String))
+  password = HTML.escape(env.params.body["password"].as(String))
+  vote = HTML.escape(env.params.body["vote"].as(String))
+  reason = HTML.escape(env.params.body["reason"].as(String))
 
   error_text = ""
   error_text += validate_username(name)
@@ -20,7 +20,7 @@ post "/cap/:cap_slug/vote" do |env|
   if rs.move_next
     cap_row = rs.read(poll_id: Int64, kind: Int64)
     cap_data = {poll_id: cap_row[:poll_id], kind: CapKind.from_value(cap_row[:kind])}
-    if cap_data[:kind] != CapKind::Vote && cap_data[:kind] != CapKind::Admin
+    if cap_data[:kind] != CapKind::PollVote && cap_data[:kind] != CapKind::PollAdmin
       rs.close
       error_text = "Unauthorized. "
       halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
@@ -69,14 +69,14 @@ post "/cap/:cap_slug/vote" do |env|
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end
 
-get "/cap/:cap_slug/admin/end_voting" do |env|
+post "/cap/:cap_slug/poll/end_voting" do |env|
   # fetch relevant cap and ensure we're allowed to administrate
   cap_data = nil
   rs = DATABASE.query "select poll_id, kind from caps where cap_slug = ?", env.params.url["cap_slug"]
   if rs.move_next
     cap_row = rs.read(poll_id: Int64, kind: Int64)
     cap_data = {poll_id: cap_row[:poll_id], kind: CapKind.from_value(cap_row[:kind])}
-    if cap_data[:kind] != CapKind::Admin
+    if cap_data[:kind] != CapKind::PollAdmin
       rs.close
       error_text = "Unauthorized. "
       halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
@@ -92,10 +92,12 @@ get "/cap/:cap_slug/admin/end_voting" do |env|
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end
 
-post "/cap/:cap_slug/admin/update_content" do |env|
-  content = env.params.body["content"].as(String)
+post "/cap/:cap_slug/poll/update" do |env|
+  title = HTML.escape(env.params.body["title"].as(String))
+  description = HTML.escape(env.params.body["description"].as(String))
   error_text = ""
-  error_text += validate_content(content)
+  error_text += validate_title(title)
+  error_text += validate_content(description)
   unless error_text.empty?
     halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
   end
@@ -105,7 +107,7 @@ post "/cap/:cap_slug/admin/update_content" do |env|
   if rs.move_next
     cap_row = rs.read(poll_id: Int64, kind: Int64)
     cap_data = {poll_id: cap_row[:poll_id], kind: CapKind.from_value(cap_row[:kind])}
-    if cap_data[:kind] != CapKind::Admin
+    if cap_data[:kind] != CapKind::PollAdmin
       rs.close
       error_text = "Unauthorized. "
       halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
@@ -116,7 +118,7 @@ post "/cap/:cap_slug/admin/update_content" do |env|
     error_text = "Unauthorized. "
     halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
   end
-  DATABASE.exec "update polls set content = ? where id = ?", content, cap_data.not_nil![:poll_id]
+  DATABASE.exec "update polls set title = ?, description = ? where id = ?", title, description, cap_data.not_nil![:poll_id]
   env.response.status_code = 303
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end

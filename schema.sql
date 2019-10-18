@@ -1,7 +1,8 @@
 create table if not exists polls (
   id integer primary key,
   created_at date default current_timestamp,
-  content string not null
+  title string not null,
+  description string not null
 );
 
 create table if not exists caps (

@@ -29,29 +29,29 @@ DATABASE.exec "PRAGMA foreign_keys = ON"
 
 enum CapKind
   # Administrate poll, disable voting etc.
-  Admin = 5
+  PollAdmin = 5
   # Vote and add opinions
-  Vote = 4
+  PollVote = 4
   # View, with added header that voting has been closed
-  DisabledVote = 3
+  PollDisabledVote = 3
   # View
-  View = 2
+  PollView = 2
   # View but show no names
-  ViewAnon = 1
+  PollViewAnon = 1
   # Fail
   Revoked = 0
 
   def to_s
     case self
-    when Admin
+    when PollAdmin
       "Administrate"
-    when Vote
+    when PollVote
       "Vote"
-    when DisabledVote
+    when PollDisabledVote
       "Vote (closed)"
-    when View
+    when PollView
       "View"
-    when ViewAnon
+    when PollViewAnon
       "View (anonymized)"
     end
   end
