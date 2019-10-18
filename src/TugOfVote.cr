@@ -5,21 +5,11 @@ require "sqlite3"
 require "dotenv"
 
 require "./Helpers"
-require "./ViewMain"
-require "./ViewCap"
-require "./ViewNew"
+require "./views/main"
+require "./views/cap"
+require "./views/new"
 
 Dotenv.load!
-
-error 404 do
-  error_text = "This URL is unknown, invalid or has been revoked. Sorry."
-  render "src/ecr/cap_invalid.ecr"
-end
-
-error 500 do
-  error_text = "Internal server error. Please try again or contact the admin."
-  render "src/ecr/cap_invalid.ecr"
-end
 
 BASE_URL = ENV["BASE_URL"]
 

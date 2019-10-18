@@ -1,7 +1,7 @@
-require "./ViewCapPoll"
-require "./ViewCapPollActions"
-require "./ViewCapList"
-require "./ViewCapListActions"
+require "./cap_poll/main"
+require "./cap_poll/actions"
+require "./cap_list/main"
+require "./cap_list/actions"
 
 get "/cap/:cap_slug" do |env|
   rs = DATABASE.query "select poll_id, list_id, kind, cap_slug from caps where cap_slug = ?", env.params.url["cap_slug"]
