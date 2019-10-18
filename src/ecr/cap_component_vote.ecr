@@ -1,13 +1,10 @@
 <div class="vote">
   <h2>Vote</h2>
   <form action="/cap/<%= cap.cap_slug %>/poll/vote" method="post">
-  <div class="name row">
-    <label for="name">Your name</label><input id="name" placeholder="lain" name="name">
-  </div>
-  <div class="pin row">
-    <label for="password">Password (for later edits)</label><input id="password" type="password" name="password">
-  </div>
-  <div class="vote row">
+    <label for="name">Your name</label>
+    <input id="name" placeholder="lain" name="name">
+    <label for="password">Password (for later edits)</label>
+    <input id="password" type="password" name="password">
     <label for="vote">Your vote</label>
     <select id="vote" name="vote">
       <option value="delvote">Delete my vote</option>
@@ -15,11 +12,8 @@
       <option value="neutral">Neutral</option>
       <option value="against">Against</option>
     </select>
-  </div>
-  <div class="reason row">
     <label for="reason">Reason</label>
-    <input placeholder="Yeah I dislike it" id="reason" name="reason">
-  </div>
-  <button>Save</button>
+    <textarea id="reason" name="reason"></textarea>
+    <button>Save</button>
   </form>
 </div>
