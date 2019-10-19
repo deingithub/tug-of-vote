@@ -10,7 +10,11 @@
   <title>Tug Of Vote</title>
 </head>
 <body>
-  <h1><a href="/">Tug Of Vote</a></h1>
+  <header>
+    <a href="/" class="header-link">Tug Of Vote</a>
+    <a href="/new">New Poll</a>
+    <a href="/new_list">New List</a>
+  </header>
   <section>
     <h2>Create new Poll</h2>
     <%- if list_cap -%>
@@ -20,14 +24,10 @@
       <%- if list_cap -%>
         <input type="hidden" name="listcap" value="<%= list_cap.cap_slug %>">
       <%- end -%>
-      <div class="row">
-        <label for="title">Title:</label>
-        <input name="title" id="title" required maxlength="200">
-      </div>
-      <div class="row textarea-row">
-        <label for="text-description">Your Proposal:</label>
-        <textarea name="description" id="text-description" required maxlength="20000"></textarea>
-      </div>
+      <label for="title">Title:</label>
+      <input name="title" id="title" required maxlength="200">
+      <label for="text-description">Your Proposal:</label>
+      <textarea name="description" id="text-description" required maxlength="20000"></textarea>
       <button>Go!</button>
     </form>
   </section>

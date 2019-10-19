@@ -10,7 +10,11 @@
   <title>ToV: <%= cap.kind.to_verb %> <%= list.title %></title>
 </head>
 <body>
-  <h1><a href="/">Tug Of Vote</a></h1>
+  <header>
+    <a href="/" class="header-link">Tug Of Vote</a>
+    <a href="/new">New Poll</a>
+    <a href="/new_list">New List</a>
+  </header>
   <section class="cap-list">
     <h2><%= list.title %></h2>
     <p><b>About this list: </b><%= list.description %></p>
@@ -58,11 +62,9 @@
             <textarea id="edit-poll-textarea" name="description" required maxlength="20000"><%= list.description %></textarea>
             <button>Update list</button>
           </form>
-          <p></p>
           <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">
-            <label for="cap_url">Link</label>
+            <label for="cap_url">Append Link</label>
             <input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url" pattern="(<%= BASE_URL%>/cap/)?[a-zA-Z0-9\-_]+">
-            <div></div> <!-- ugly but works to force the button into the next row-->
             <button>Append to List</button>
           </form>
         </div>
