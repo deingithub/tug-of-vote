@@ -6,6 +6,9 @@ get "/cap/:cap_slug/list/remove/:target_slug" do |env|
   end
 
   DATABASE.exec "delete from list_entries where list_id = ? and cap_slug = ?", cap_data.list_id, env.params.url["target_slug"]
+
+  LOG.info("list##{cap_data.list_id}: #{cap_data.cap_slug} removed entry #{env.params.url["target_slug"]}")
+
   env.response.status_code = 302
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end
@@ -24,6 +27,9 @@ post "/cap/:cap_slug/list/append" do |env|
   end
 
   DATABASE.exec "insert into list_entries (list_id, cap_slug) values (?,?)", cap_data.list_id, cap_slug
+
+  LOG.info("list##{cap_data.list_id}: #{cap_data.cap_slug} added entry #{cap_slug}")
+
   env.response.status_code = 302
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end
@@ -45,6 +51,9 @@ post "/cap/:cap_slug/list/update" do |env|
   end
 
   DATABASE.exec "update lists set title = ?, description = ? where id = ?", title, description, cap_data.list_id
+
+  LOG.info("list##{cap_data.list_id}: #{cap_data.cap_slug} updated content")
+
   env.response.status_code = 303
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end

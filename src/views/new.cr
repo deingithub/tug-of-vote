@@ -16,6 +16,7 @@ post "/new" do |env|
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", vote_cap, CapKind::PollVote.value, poll_id)
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollView.value, poll_id)
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollViewAnon.value, poll_id)
+    LOG.info("poll##{poll_id}: #{admin_cap} created")
   end
 
   list_param = env.params.body["listcap"]?
@@ -45,6 +46,7 @@ post "/new_list" do |env|
     list_id = c.exec("insert into lists (title, description) values (?, ?)", title, description).last_insert_id
     c.exec("insert into caps (cap_slug, kind, list_id) values (?,?,?)", admin_cap, CapKind::ListAdmin.value, list_id)
     c.exec("insert into caps (cap_slug, kind, list_id) values (?,?,?)", make_cap, CapKind::ListView.value, list_id)
+    LOG.info("list##{list_id}: #{admin_cap} created")
   end
 
   env.response.status_code = 303

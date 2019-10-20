@@ -10,7 +10,7 @@ get "/new" do |env|
   if list_cap && list_cap.kind == CapKind::ListAdmin
     list = DATABASE.query_all("select * from lists where id = ?", list_cap.list_id, as: List)[0]
     next render "src/ecr/new_poll.ecr"
-  else 
+  else
     list_cap = nil
   end
   render "src/ecr/new_poll.ecr"

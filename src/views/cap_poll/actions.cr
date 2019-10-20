@@ -36,13 +36,19 @@ post "/cap/:cap_slug/poll/vote" do |env|
       halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
     end
     DATABASE.exec "delete from votes where poll_id = ? and username = ?", cap_data.poll_id, name
+
+    LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} deleted vote #{name}")
   else
     vote_enum = VoteKind.parse(vote)
     unless votes.empty?
       DATABASE.exec "update votes set kind = ?, reason = ?, created_at = current_timestamp where poll_id = ? and username = ?", vote_enum.value, reason, cap_data.poll_id, name
+
+      LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} modified #{name}")
     else
       hashed_password = Crypto::Bcrypt::Password.create(password).to_s
       DATABASE.exec "insert into votes (kind, username, password, reason, poll_id) values (?,?,?,?,?)", vote_enum.value, name, hashed_password, reason, cap_data.poll_id
+
+      LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} created vote #{name}")
     end
   end
 
@@ -58,6 +64,8 @@ get "/cap/:cap_slug/poll/end_voting" do |env|
   end
 
   DATABASE.exec "update caps set kind = 3 where kind = 4 and poll_id = ?", cap_data.poll_id
+  LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} closed voting")
+
   env.response.status_code = 302
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end
@@ -77,8 +85,10 @@ post "/cap/:cap_slug/poll/update" do |env|
   unless error_text.empty?
     halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
   end
-  
+
   DATABASE.exec "update polls set title = ?, description = ? where id = ?", title, description, cap_data.poll_id
+  LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} updated poll")
+
   env.response.status_code = 303
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end
