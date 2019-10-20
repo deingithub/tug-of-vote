@@ -1,6 +1,6 @@
 <h2><%= poll.title %></h2>
 
-<p><b>The Proposal: </b><%= poll.description %></p>
+<p><b>The Proposal: </b><%= content_to_html(poll.description) %></p>
 
 <div class="votebar">
   <div class="pro" title="Votes cast in favor" style="flex-grow: <%= pro_votes.size %>;">+</div>
@@ -17,7 +17,7 @@
       <%- unless vote.reason.empty? -%>
         <li>
           <blockquote>
-            <p><%= vote.reason %></p>
+            <p><%= content_to_html(vote.reason) %></p>
             <cite><%= anonymize ? "[REDACTED]" : vote.username %></cite>
           </blockquote>
         </li>

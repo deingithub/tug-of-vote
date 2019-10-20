@@ -17,7 +17,7 @@
   </header>
   <section class="cap-list">
     <h2><%= list.title %></h2>
-    <p><b>About this list: </b><%= list.description %></p>
+    <p><b>About this list: </b><%= content_to_html(list.description) %></p>
     <ul>
       <%- caps.each do |(entry_cap, entry_val)| -%>
         <li>

@@ -38,3 +38,7 @@ def fetch_cap(cap_slug)
     return arr[0]
   end
 end
+
+def content_to_html(str)
+  str.gsub("\n", "<br>")
+end
