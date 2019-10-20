@@ -85,6 +85,9 @@ div.votebar div.neu {
 div.votebar div.con {
   background-color: #ff218c;
 }
+div.votebar.novotes div {
+  flex-grow: 1 !important;
+}
 
 .reasons {
   display: flex;
