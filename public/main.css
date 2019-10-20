@@ -75,6 +75,7 @@ div.votebar {
 div.votebar div {
   text-align: center;
   font-size: 2rem;
+  flex-basis: 0;
 }
 div.votebar div.pro {
   background-color: #21b1ff;
