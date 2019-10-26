@@ -24,6 +24,7 @@ post "/new" do |env|
     list_cap = fetch_cap(list_param)
     if list_cap && list_cap.kind == CapKind::ListAdmin
       DATABASE.exec("insert into list_entries (cap_slug, list_id) values (?,?)", vote_cap, list_cap.list_id)
+      LOG.info("list##{list_cap.list_id}: #{list_cap.cap_slug} added entry #{vote_cap}")
     end
   end
 
