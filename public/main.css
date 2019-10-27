@@ -206,4 +206,7 @@ form > button {
   .danger {
     color: #ff0050;
   }
+  div.votebar div {
+    color: #16161d;
+  }
 }
