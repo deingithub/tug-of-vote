@@ -1,0 +1,26 @@
+/* ==UserStyle==
+@name           Tara's Slate Scheme for Tug Of Vote
+@namespace      tov.15318.de
+@version        1.0.0
+@description    As it says on the tin
+@author         Tara
+@license        CC0
+==/UserStyle== */
+@-moz-document domain("tov.15318.de") {
+  body, body a {
+      color: #fff;
+      background-color: #4a525a;
+  }
+  .danger {
+      color: #b33;
+  }
+  body header::after {
+      background: #fff;
+  }
+  .poll-actions h2 {
+      border-color: #fff;
+  }
+  .votebar div {
+      color: #4a525a;
+  }
+}
