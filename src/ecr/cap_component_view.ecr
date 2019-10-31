@@ -1,6 +1,9 @@
 <h2><%= poll.title %></h2>
 
-<p><b>The Proposal: </b><%= content_to_html(poll.description) %></p>
+<p>
+  <b>The Proposal: </b>
+  <%= content_to_html(poll.description) %>
+</p>
 
 <div class="votebar <%= votes.empty? ? "novotes" : "" %>">
   <div class="pro" title="Votes cast in favor" style="flex-grow: <%= pro_votes.size %>;">+</div>
@@ -39,3 +42,19 @@
   </div>
 <%- end -%>
 </section>
+
+<p class="object-metadata">
+  Created at <%= poll.created_at %>.<br>
+  <%- if cap.kind == CapKind::PollVoteDisabled -%>
+  Voting has ended. You can only view the results now.<br>
+  <%- end -%>
+  <%= 
+    lower_caps
+    .sort_by{|cap| cap.kind }
+    .reverse
+    .map {|cap| "<a href=\"/cap/#{cap.cap_slug}\">#{cap.kind}</a>" }
+    .join(" · ")
+  %>
+  <br>
+  Only share these links with people you trust to use the respective permission.
+</p>

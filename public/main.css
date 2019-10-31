@@ -26,7 +26,6 @@ section.content-page p {
   max-width: 75ch;
 }
 
-
 /* layout */
 
 body {
@@ -44,18 +43,22 @@ body footer {
 body header {
   font-size: 2rem;
 }
+
 body header a.header-link {
   text-decoration: none;
 }
+
 body header a:not(.header-link) {
   vertical-align: middle;
   font-size: 1rem;
   margin-left: 1rem;
   text-decoration: none;
 }
+
 body header a:not(.header-link):hover, body header a:not(.header-link):focus {
   text-decoration: underline;
 }
+
 body header::after {
   width: 100%;
   height: 4px;
@@ -63,6 +66,7 @@ body header::after {
   content: " ";
   background: #333;
 }
+
 body h2 {
   margin: 2rem 0;
 }
@@ -72,66 +76,86 @@ body h2 {
 div.votebar {
   display: flex;
 }
+
 div.votebar div {
   text-align: center;
   font-size: 2rem;
   flex-basis: 0;
 }
+
 div.votebar div.pro {
   background-color: #21b1ff;
 }
+
 div.votebar div.neu {
   background-color: #ffd800;
 }
+
 div.votebar div.con {
   background-color: #ff218c;
 }
+
 div.votebar.novotes div {
   flex-grow: 1 !important;
 }
 
 .reasons {
-  display: flex;
+  display: grid;
   margin-bottom: 2rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
 }
+
 .reasons>div {
-  flex-grow: 1;
-  flex-basis: 33%;
   padding: .3rem;
 }
+
 .reasons>div h2 {
   font-weight: normal;
   font-style: italic;
   margin-bottom: 0;
 }
+
 .reasons ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
+
 .reasons ul li blockquote {
   margin-left: 0;
 }
+
 .reasons ul li blockquote p {
   margin-bottom: 0;
 }
+
 .reasons ul li blockquote cite::before {
   content: '— ';
 }
 
-.poll-actions h2 {
+.object-actions h2 {
   margin: .3rem 0;
-  border-bottom: 3px solid #333;
 }
 
-.poll-actions {
-  display: flex;
+.object-actions {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
   column-gap: 3rem;
 }
 
-.poll-actions div {
+.object-actions div {
   flex-basis: content;
   min-width: 20rem;
+  align-self: flex-start;
+}
+
+.object-metadata {
+  padding: .3rem 0;
+  border: 1px solid #333;
+  border-left: none;
+  border-right: none;
 }
 
 /* lists */
@@ -141,48 +165,47 @@ li.add-to-list {
 }
 
 /* forms */
-form + form {
+
+form+form {
   margin-top: 1rem;
 }
 
-form > label {
+form>label {
   display: block;
 }
-form > label:not(:first-child) {
+
+form>label:not(:first-child) {
   margin-top: .3rem;
 }
 
-form > textarea {
+form>textarea {
   height: 10ch;
   font-size: .9rem;
 }
 
-form > input, form > textarea {
+form>input, form>textarea {
   width: 100%;
   box-sizing: border-box;
   display: block;
   max-width: 100ch;
 }
-form > button {
+
+form>button {
   margin-top: .3rem;
 }
 
-@media screen and (max-width: 100rem) {
+@media screen and (max-width: 60rem) {
   body {
     width: 100%;
     padding: 0 .3rem;
     box-sizing: border-box;
   }
-  header {
-    width: 100%;
+  .reasons, .object-actions {
+    display: block;
   }
-  .poll-actions div, .reasons div {
-    width: 100%;
-    min-width: unset;
-    flex-basis: unset !important;
-  }
-  .reasons, .poll-actions {
-    flex-wrap: wrap;
+  .object-actions div:not(:last-child) {
+    padding-bottom: .6rem;
+    border-bottom: 1px solid #333;
   }
   input, select, textarea, button {
     font-size: 1rem;
@@ -197,7 +220,7 @@ form > button {
   body header::after {
     background-color: #f0f0f0;
   }
-  body .poll-actions h2 {
+  body .object-actions h2 {
     border-color: #f0f0f0;
   }
   body a {

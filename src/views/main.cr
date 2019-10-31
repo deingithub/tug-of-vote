@@ -1,9 +1,11 @@
 get "/" do |env|
-  send_file env, "public/index.html"
+  render "src/ecr/static_index.ecr"
 end
+
 get "/help" do |env|
-  send_file env, "public/help.html"
+  render "src/ecr/static_help.ecr"
 end
+
 get "/new" do |env|
   list_param = env.params.query["list"]?
   list_cap = fetch_cap(list_param)
@@ -15,8 +17,9 @@ get "/new" do |env|
   end
   render "src/ecr/new_poll.ecr"
 end
+
 get "/new_list" do |env|
-  send_file env, "public/new_list.html"
+  render "src/ecr/new_list.ecr"
 end
 
 error 404 do

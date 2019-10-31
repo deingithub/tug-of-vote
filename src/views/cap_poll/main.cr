@@ -10,7 +10,6 @@ def gen_poll(res)
   end
   poll = DATABASE.query_all("select * from polls where id = ?", res.poll_id, as: Poll)[0]
   view_component = gen_view(res)
-  meta_component = gen_meta(res)
   vote_component = gen_vote(res)
   admin_component = gen_admin(res)
   render "src/ecr/cap_main.ecr"
@@ -19,6 +18,7 @@ end
 def gen_view(cap)
   poll = DATABASE.query_all("select * from polls where id = ?", cap.poll_id, as: Poll)[0]
   votes = DATABASE.query_all("select * from votes where poll_id = ?", cap.poll_id, as: Vote)
+  lower_caps = DATABASE.query_all("select * from caps where poll_id = ? and kind <= ? and kind > ?", cap.poll_id, cap.kind_val, CapKind::Revoked.value, as: Cap)
 
   pro_votes = votes.select { |x| x.kind == VoteKind::InFavor }
   con_votes = votes.select { |x| x.kind == VoteKind::Against }
@@ -43,12 +43,4 @@ def gen_admin(cap)
   end
   poll = DATABASE.query_all("select * from polls where id = ?", cap.poll_id, as: Poll)[0]
   render "src/ecr/cap_component_admin.ecr"
-end
-
-def gen_meta(cap)
-  # get the relevant poll
-  poll = DATABASE.query_all("select * from polls where id = ?", cap.poll_id, as: Poll)[0]
-  # get all caps with "lower" kind than this one
-  lower_caps = DATABASE.query_all("select * from caps where poll_id = ? and kind <= ? and kind > ?", cap.poll_id, cap.kind_val, CapKind::Revoked.value, as: Cap)
-  render "src/ecr/cap_component_meta.ecr"
 end

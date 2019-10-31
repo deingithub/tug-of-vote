@@ -46,9 +46,9 @@ end
 # ~~Based on~~ Stolen from Kemal's default logger, writes to global LOG instead
 class ToVLogger < Kemal::BaseLogHandler
   def call(context : HTTP::Server::Context)
-    time = Time.now
+    time = Time.utc
     call_next(context)
-    elapsed_text = elapsed_text(Time.now - time)
+    elapsed_text = elapsed_text(Time.utc - time)
     LOG.debug "#{context.response.status_code} #{context.request.method} #{context.request.resource} #{elapsed_text}"
     context
   end
@@ -64,3 +64,18 @@ class ToVLogger < Kemal::BaseLogHandler
     "#{(millis * 1000).round(2)}µs"
   end
 end
+
+GLOBAL_FOOTER = <<-HTML
+<footer>
+  <p>This page is best viewed using curl(1) on a screen resolution of 80×24 characters or better. Uses IBM Plex Sans (<a href="/ofl.txt">License</a>). Brought to you by <a href="https://15318.de">Dingenskirchen Systems</a>. View the <a href="https://github.com/deingithub/tug-of-vote">source code</a> or the <a href="/help">manual</a>.</p>
+  <p>Alternate Colorschemes: <a href="/taraslate.user.css">Tara's Slate</a>. Tug of Vote respects your dark theme preference if set.</p>
+</footer>
+HTML
+
+GLOBAL_HEADER = <<-HTML
+<header>
+  <a href="/" class="header-link">Tug Of Vote</a>
+  <a href="/new">New Poll</a>
+  <a href="/new_list">New List</a>
+</header>
+HTML
