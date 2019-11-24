@@ -7,6 +7,7 @@
   <meta property="og:title" content="ToV: <%= cap.kind.to_verb %> <%= list.title %>" />
   <meta property="og:type" content="website" />
   <meta property="og:description" content="<%= og_desc %>"/>
+  <script src="/tov.js"></script>
   <title>ToV: <%= cap.kind.to_verb %> <%= list.title %></title>
 </head>
 <body>
@@ -21,7 +22,13 @@
           <a href="/cap/<%= entry_cap.cap_slug %>"><%= entry_cap.kind %></a>:
           <%= entry_val.title %>
           <%- if cap.kind == CapKind::ListAdmin -%>
-          <a href="/cap/<%= cap.cap_slug %>/list/remove/<%= entry_cap.cap_slug %>" class="danger">[remove]</a>
+            <a
+              href="/cap/<%= cap.cap_slug %>/list/remove/<%= entry_cap.cap_slug %>"
+              class="danger"
+              data-js-confirm="Are you sure you want to remove '<%= entry_val.title %>' from this list?"
+            >
+              [remove]
+            </a>
           <%- end -%>
         </li>
       <%- end -%>
