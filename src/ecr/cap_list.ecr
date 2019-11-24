@@ -70,6 +70,8 @@
           <input id="edit-poll-title" name="title" value="<%= list.title %>" required maxlength="200">
           <label for="edit-poll-textarea">Edit description</label>
           <textarea id="edit-poll-textarea" name="description" required maxlength="20000"><%= list.description %></textarea>
+          <label for="edit-poll-webhook-url">Edit Webhook URL</label>
+          <input id="edit-poll-webhook-url" name="webhook_url" value="<%= list.webhook_url %>" required maxlength="200">
           <button>Update list</button>
         </form>
         <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">

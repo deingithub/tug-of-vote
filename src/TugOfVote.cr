@@ -8,6 +8,7 @@ require "io"
 
 require "./Models"
 require "./Helpers"
+require "./Webhooks"
 require "./views/main"
 require "./views/cap"
 require "./views/new"

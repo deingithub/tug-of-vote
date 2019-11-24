@@ -9,7 +9,8 @@ create table if not exists lists (
   id integer primary key,
   created_at date default current_timestamp,
   description string not null,
-  title string not null
+  title string not null,
+  webhook_url string not null default ""
 );
 
 create table if not exists list_entries (

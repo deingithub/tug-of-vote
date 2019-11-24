@@ -118,6 +118,7 @@ class List
     created_at:  String,
     description: {type: String, converter: DBString},
     title:       {type: String, converter: DBString},
+    webhook_url: {type: String, converter: DBString},
   })
 end
 

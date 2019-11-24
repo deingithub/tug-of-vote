@@ -30,6 +30,11 @@ def validate_title(str)
   return ""
 end
 
+def validate_url(str)
+  return "URL may not exceed 512 characters. " if str.size > 512
+  return ""
+end
+
 def fetch_cap(cap_slug)
   arr = DATABASE.query_all("select * from caps where cap_slug = ?", cap_slug, as: Cap)
   if arr.empty?
