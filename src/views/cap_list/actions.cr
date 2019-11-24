@@ -57,3 +57,23 @@ post "/cap/:cap_slug/list/update" do |env|
   env.response.status_code = 303
   env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
 end
+
+get "/cap/:cap_slug/list/regenerate_caps" do |env|
+  cap_data = fetch_cap(env.params.url["cap_slug"])
+  if cap_data.nil? || cap_data.kind != CapKind::ListAdmin
+    error_text = "Unauthorized. "
+    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+  end
+
+  admin_cap = make_cap()
+  DATABASE.transaction do |tx|
+    c = tx.connection
+    c.exec("update caps set kind = 0 where list_id = ?", cap_data.list_id)
+    c.exec("insert into caps (cap_slug, kind, list_id) values (?,?,?)", admin_cap, CapKind::ListAdmin.value, cap_data.list_id)
+    c.exec("insert into caps (cap_slug, kind, list_id) values (?,?,?)", make_cap, CapKind::ListView.value, cap_data.list_id)
+    LOG.info("list##{cap_data.list_id}: #{cap_data.cap_slug} regenerated caps, now #{admin_cap}")
+  end
+
+  env.response.status_code = 302
+  env.response.headers.add("Location", "/cap/#{admin_cap}")
+end
