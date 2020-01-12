@@ -13,7 +13,8 @@
 
 /* text styles */
 
-body, body a {
+body,
+body a {
   color: #333;
   font-family: "IBM Plex Sans";
 }
@@ -35,7 +36,7 @@ body {
 }
 
 body footer {
-  font-size: .7rem;
+  font-size: 0.7rem;
   margin-top: 3rem;
 }
 
@@ -56,7 +57,8 @@ body header a:not(.header-link) {
   text-decoration: none;
 }
 
-body header a:not(.header-link):hover, body header a:not(.header-link):focus {
+body header a:not(.header-link):hover,
+body header a:not(.header-link):focus {
   text-decoration: underline;
 }
 
@@ -107,11 +109,11 @@ div.votebar.novotes div {
   grid-template-rows: 1fr;
 }
 
-.reasons>div {
-  padding: .3rem;
+.reasons > div {
+  padding: 0.3rem;
 }
 
-.reasons>div h2 {
+.reasons > div h2 {
   font-weight: normal;
   font-style: italic;
   margin-bottom: 0;
@@ -128,15 +130,16 @@ div.votebar.novotes div {
 }
 
 .reasons ul li blockquote p {
+  overflow-wrap: anywhere;
   margin-bottom: 0;
 }
 
 .reasons ul li blockquote cite::before {
-  content: '— ';
+  content: "— ";
 }
 
 .object-actions h2 {
-  margin: .3rem 0;
+  margin: 0.3rem 0;
 }
 
 .object-actions {
@@ -153,7 +156,7 @@ div.votebar.novotes div {
 }
 
 .object-metadata {
-  padding: .3rem 0;
+  padding: 0.3rem 0;
   border: 1px solid #333;
   border-left: none;
   border-right: none;
@@ -167,48 +170,53 @@ li.add-to-list {
 
 /* forms */
 
-form+form {
+form + form {
   margin-top: 1rem;
 }
 
-form>label {
+form > label {
   display: block;
 }
 
-form>label:not(:first-child) {
-  margin-top: .3rem;
+form > label:not(:first-child) {
+  margin-top: 0.3rem;
 }
 
-form>textarea {
+form > textarea {
   height: 10ch;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
-form>input, form>textarea {
+form > input,
+form > textarea {
   width: 100%;
   box-sizing: border-box;
   display: block;
   max-width: 100ch;
 }
 
-form>button {
-  margin-top: .3rem;
+form > button {
+  margin-top: 0.3rem;
 }
 
 @media screen and (max-width: 60rem) {
   body {
     width: 100%;
-    padding: 0 .3rem;
+    padding: 0 0.3rem;
     box-sizing: border-box;
   }
-  .reasons, .object-actions {
+  .reasons,
+  .object-actions {
     display: block;
   }
   .object-actions div:not(:last-child) {
-    padding-bottom: .6rem;
+    padding-bottom: 0.6rem;
     border-bottom: 1px solid #333;
   }
-  input, select, textarea, button {
+  input,
+  select,
+  textarea,
+  button {
     font-size: 1rem;
   }
 }
