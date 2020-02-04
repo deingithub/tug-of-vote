@@ -19,8 +19,8 @@ def gen_poll(cap)
     LOG.info("poll##{cap.poll_id}: #{cap.cap_slug} auto-closed voting")
     if cap.kind == CapKind::PollVote
       cap.kind = CapKind::PollVoteDisabled
+      gen_poll(cap)
     end
-    gen_poll(cap)
   end
 
   votes = DATABASE.query_all("select * from votes where poll_id = ?", cap.poll_id, as: Vote)
