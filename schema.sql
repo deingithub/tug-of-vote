@@ -2,7 +2,8 @@ create table if not exists polls (
   id integer primary key,
   created_at date default current_timestamp,
   title string not null,
-  description string not null
+  description string not null,
+  duration integer default null,
 );
 
 create table if not exists lists (

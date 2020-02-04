@@ -98,6 +98,7 @@ class Poll
     created_at:  String,
     title:       {type: String, converter: DBString},
     description: {type: String, converter: DBString},
+    duration:    Int64?,
   })
 end
 

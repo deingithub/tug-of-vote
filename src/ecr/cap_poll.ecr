@@ -62,7 +62,11 @@
     </section>
 
     <p class="object-metadata">
-      Created at <%= poll.created_at %>.<br>
+      Created at <%= poll.created_at %>.
+      <%- if poll.duration -%>
+      Voting closes automatically after <%= poll.duration %> hour<%= poll.duration == 1 ? "" : "s" %>.
+      <%- end -%>
+      <br>
       <%- if cap.kind == CapKind::PollVoteDisabled -%>
       Voting has ended. You can only view the results now.<br>
       <%- end -%>

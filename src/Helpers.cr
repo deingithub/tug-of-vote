@@ -35,6 +35,14 @@ def validate_url(str)
   return ""
 end
 
+def validate_duration(val)
+  if val
+    return "Duration may not be zero. " if val == 0
+    return "Duration may not be greater than a year. " if val > 8760
+  end
+  return ""
+end
+
 def fetch_cap(cap_slug)
   arr = DATABASE.query_all("select * from caps where cap_slug = ?", cap_slug, as: Cap)
   if arr.empty?
@@ -79,8 +87,8 @@ HTML
 
 GLOBAL_HEADER = <<-HTML
 <header>
-  <a href="/" class="header-link">Tug Of Vote</a>
-  <a href="/new">New Poll</a>
-  <a href="/new_list">New List</a>
+ <a href="/" class="header-link">Tug Of Vote</a>
+ <a href="/new">New Poll</a>
+ <a href="/new_list">New List</a>
 </header>
 HTML

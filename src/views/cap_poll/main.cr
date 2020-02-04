@@ -9,6 +9,16 @@ def gen_poll(cap)
     og_desc = "View this poll on Tug of Vote"
   end
   poll = DATABASE.query_all("select * from polls where id = ?", cap.poll_id, as: Poll)[0]
+
+  if poll.duration && Time.parse_utc(poll.created_at, "%F %H:%M:%S") + Time::Span.new(poll.duration.not_nil!, 0, 0) <= Time.utc
+    DATABASE.exec("update caps set kind = 3 where kind = 4 and poll_id = ?", cap.poll_id)
+    LOG.info("poll##{cap.poll_id}: #{cap.cap_slug} auto-closed voting")
+    if cap.kind == CapKind::PollVote
+      cap.kind = CapKind::PollVoteDisabled
+    end
+    gen_poll(cap)
+  end
+
   votes = DATABASE.query_all("select * from votes where poll_id = ?", cap.poll_id, as: Vote)
   lower_caps = DATABASE.query_all("select * from caps where poll_id = ? and kind <= ? and kind > ?", cap.poll_id, cap.kind_val, CapKind::Revoked.value, as: Cap)
 

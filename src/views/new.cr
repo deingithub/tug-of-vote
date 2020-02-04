@@ -1,9 +1,15 @@
 post "/new" do |env|
   title = HTML.escape(env.params.body["title"].as(String))
   description = HTML.escape(env.params.body["description"].as(String))
+  duration = nil
+  begin
+    duration = env.params.body["duration"].to_i
+  rescue e
+  end
   error_text = ""
   error_text += validate_title(title)
   error_text += validate_content(description)
+  error_text += validate_duration(duration)
   unless error_text.empty?
     halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
   end
@@ -11,7 +17,7 @@ post "/new" do |env|
   vote_cap = make_cap()
   DATABASE.transaction do |tx|
     c = tx.connection
-    poll_id = c.exec("insert into polls (title, description) values (?, ?)", title, description).last_insert_id
+    poll_id = c.exec("insert into polls (title, description, duration) values (?, ?, ?)", title, description, duration).last_insert_id
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", admin_cap, CapKind::PollAdmin.value, poll_id)
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", vote_cap, CapKind::PollVote.value, poll_id)
     c.exec("insert into caps (cap_slug, kind, poll_id) values (?,?,?)", make_cap, CapKind::PollView.value, poll_id)
