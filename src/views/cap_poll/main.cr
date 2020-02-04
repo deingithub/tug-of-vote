@@ -10,7 +10,11 @@ def gen_poll(cap)
   end
   poll = DATABASE.query_all("select * from polls where id = ?", cap.poll_id, as: Poll)[0]
 
-  if poll.duration && Time.parse_utc(poll.created_at, "%F %H:%M:%S") + Time::Span.new(poll.duration.not_nil!, 0, 0) <= Time.utc
+  if (
+       poll.duration &&
+       (cap.kind == CapKind::PollVote || cap.kind == CapKind::PollAdmin) &&
+       Time.parse_utc(poll.created_at, "%F %H:%M:%S") + Time::Span.new(poll.duration.not_nil!, 0, 0) <= Time.utc
+     )
     DATABASE.exec("update caps set kind = 3 where kind = 4 and poll_id = ?", cap.poll_id)
     LOG.info("poll##{cap.poll_id}: #{cap.cap_slug} auto-closed voting")
     if cap.kind == CapKind::PollVote
