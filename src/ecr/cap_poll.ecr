@@ -39,21 +39,12 @@
           <li>
             <blockquote>
               <p><%= content_to_html(vote.reason) %></p>
-              <cite><%= anonymize ? "[REDACTED]" : vote.username %></cite>
+              <cite><%= vote.username %></cite>
             </blockquote>
           </li>
         <%- end -%>
         <%- unless no_reason_votes.empty? -%>
-          <%- if anonymize -%>
-            <li>
-              <p>
-              No reason specified: <%= no_reason_votes.size %>
-              other<%= no_reason_votes.size > 1 ? "s" : "" %>
-              </p>
-            </li>
-          <%- else -%>
-            <li><p>No reason specified: <i><%= no_reason_votes.map{ |x| x.username }.join(", ") %></i></p></li>
-          <%- end -%>
+          <li><p>No reason specified: <i><%= no_reason_votes.map{ |x| x.username }.join(", ") %></i></p></li>
         <%- end -%>
       </ul>
       <%- end -%>
