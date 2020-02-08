@@ -17,13 +17,13 @@ function updateCountdown() {
     const elem = document.querySelector("[data-js-countdown-to]");
     const then = new Date(Number(elem.getAttribute("data-js-countdown-to")));
     const now = Date.now();
-    var diff = (then - now) / 1000 / 60 / 60;
+    var diff = (then - now) / 1000 / 60;
     if (diff < 0) {
         elem.innerHTML = "Voting has ended.";
         document.querySelector(".object-actions .vote").remove();
     } else {
-        const hours = Math.floor(diff);
-        const mins = Math.floor((diff % 60) * 60);
+        const hours = Math.floor(diff / 60);
+        const mins = Math.floor(diff % 60);
         elem.innerHTML = `Voting ends in ${hours} hour${hours == 1 ? '' : 's'} and ${mins} minute${mins == 1 ? '' : 's'}.`;
         window.setTimeout(updateCountdown, 5000);
     }
