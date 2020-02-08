@@ -64,7 +64,9 @@
     <p class="object-metadata">
       Created at <%= poll.created_at %>.
       <%- if poll.duration -%>
+      <span data-js-countdown-to="<%= close_timestamp %>">
       Voting closes automatically after <%= poll.duration %> hour<%= poll.duration == 1 ? "" : "s" %>.
+      </span>
       <%- end -%>
       <br>
       <%- if cap.kind == CapKind::PollVoteDisabled -%>

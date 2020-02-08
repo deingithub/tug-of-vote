@@ -23,6 +23,11 @@ def gen_poll(cap)
     end
   end
 
+  close_timestamp = nil
+  if poll.duration
+    close_timestamp = (Time.parse_utc(poll.created_at, "%F %H:%M:%S") + Time::Span.new(poll.duration.not_nil!, 0, 0)).to_unix_ms
+  end
+
   votes = DATABASE.query_all("select * from votes where poll_id = ?", cap.poll_id, as: Vote)
   lower_caps = DATABASE.query_all("select * from caps where poll_id = ? and kind <= ? and kind > ?", cap.poll_id, cap.kind_val, CapKind::Revoked.value, as: Cap)
 
