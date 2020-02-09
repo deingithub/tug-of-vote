@@ -1,18 +1,21 @@
 post "/new" do |env|
   title = HTML.escape(env.params.body["title"].as(String))
   description = HTML.escape(env.params.body["description"].as(String))
+
   duration = nil
   begin
     duration = env.params.body["duration"].to_i
   rescue e
   end
+
   error_text = ""
   error_text += validate_title(title)
   error_text += validate_content(description)
   error_text += validate_duration(duration)
   unless error_text.empty?
-    halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 400, response: tov_render "cap_invalid"
   end
+
   admin_cap = make_cap()
   vote_cap = make_cap()
   DATABASE.transaction do |tx|
@@ -46,7 +49,7 @@ post "/new_list" do |env|
   error_text += validate_title(title)
   error_text += validate_content(description)
   unless error_text.empty?
-    halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 400, response: tov_render "cap_invalid"
   end
   admin_cap = make_cap()
   DATABASE.transaction do |tx|

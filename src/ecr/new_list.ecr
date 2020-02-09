@@ -1,28 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/main.css">
-  <meta property="og:title" content="Tug of Vote" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="Tug of Vote, a poll service."/>
-  <title>Tug Of Vote</title>
-</head>
-<body>
-  <%= GLOBAL_HEADER %>
-  
-  <section>
-    <h2>Create new List</h2>
-    <form action="/new_list" method="POST">
-      <label for="title">Title:</label>
-      <input name="title" id="title" required maxlength="200">
-      <label for="text-description">About this list:</label>
-      <textarea name="description" id="text-description" required maxlength="20000"></textarea>
-      <button>Go!</button>
-    </form>
-  </section>
+<% content_for "title" do %>Tug of Vote<% end %>
+<% content_for "og_title" do %>Tug of Vote<% end %>
+<% content_for "og_desc" do %>Tug of Vote, a poll service.<% end %>
 
-  <%= GLOBAL_FOOTER %>
-</body>
-</html>
+<section>
+  <h2>Create new List</h2>
+  <form action="/new_list" method="POST">
+    <label for="title">Title:</label>
+    <input name="title" id="title" required maxlength="200">
+    <label for="text-description">About this list:</label>
+    <textarea name="description" id="text-description" required maxlength="20000"></textarea>
+    <button>Go!</button>
+  </form>
+</section>

@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/main.css">
-  <meta property="og:title" content="Tug of Vote" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="Tug of Vote, a poll service."/>
-  <title>Tug Of Vote</title>
-</head>
-<body>
-  <%= GLOBAL_HEADER %>
+<% content_for "title" do %>Tug of Vote<% end %>
+<% content_for "og_desc" do %>Tug of Vote, a poll service.<% end %>
 
-  <section class="content-page">
-    <h2>Welcome!</h2>
-    <p>This is a tool for simple-to-use collaborative decision-making. <a href="/new">Click me</a> to create a new poll, or <a href="/new_list">click me</a> to create a new list.</p>
-    <p>If you're confused, don't blame yourself and take a look into the <a href="/help">manual</a>. ToV's not exactly intuitive yet, though it's intended to be one day&trade;.</p>
-  </section>
-
-  <%= GLOBAL_FOOTER %>
-</body>
-</html>
+<section class="content-page">
+  <h2>Welcome!</h2>
+  <p>This is a tool for simple-to-use collaborative decision-making. <a href="/new">Click me</a> to create a new poll, or <a href="/new_list">click me</a> to create a new list.</p>
+  <p>If you're confused, don't blame yourself and take a look into the <a href="/help">manual</a>. ToV's not exactly intuitive yet, though it's intended to be one day&trade;.</p>
+</section>

@@ -1,22 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/main.css">
-  <meta property="og:title" content="Tug of Vote" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="Tug of vote, a poll service."/>
-  <title>Tug Of Vote</title>
-</head>
-<body>
-  <%= GLOBAL_HEADER %>
+<% content_for "title" do %>ToV: Error<% end %>
+<% content_for "og_desc" do %><%= HTML.escape(error_text) %><% end %>
 
-  <section>
-    <h2>Error</h2>
-    <p><%= HTML.escape(error_text) %></p>
-  </section>
-
-  <%= GLOBAL_FOOTER %>
-</body>
-</html>
+<section>
+  <h2>Error</h2>
+  <p><%= HTML.escape(error_text) %></p>
+</section>

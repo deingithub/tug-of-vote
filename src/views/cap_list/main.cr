@@ -21,10 +21,6 @@ def gen_list(cap)
       raise "Unreachable"
     end
   end
-  og_desc = "View this list on Tug of Vote"
-  if cap.kind == CapKind::ListAdmin
-    og_desc = "You were supposed to keep this link private, s m h"
-  end
 
   # get all caps with "lower" kind than this one
   lower_caps = DATABASE.query_all(
@@ -34,5 +30,6 @@ def gen_list(cap)
     CapKind::PollAdmin.value,
     as: Cap
   )
-  render "src/ecr/cap_list.ecr"
+
+  tov_render "cap_list"
 end

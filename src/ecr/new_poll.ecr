@@ -1,43 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/main.css">
-  <meta property="og:title" content="Tug of Vote" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="Tug of Vote, a poll service."/>
-  <title>Tug Of Vote</title>
-</head>
-<body>
-  <%= GLOBAL_HEADER %>
-  
-  <section>
-    <h2>Create new Poll</h2>
+<% content_for "title" do %>Tug of Vote<% end %>
+<% content_for "og_desc" do %>Tug of Vote, a poll service.<% end %>
+
+<section>
+  <h2>Create new Poll</h2>
+  <%- if list_cap -%>
+    <p>The vote link to this poll will be automatically added to the list <a href="/cap/<%= list_cap.cap_slug %>"><%= list.not_nil!.title %></a>.
+  <%- end -%>
+  <form action="/new" method="POST">
     <%- if list_cap -%>
-      <p>The vote link to this poll will be automatically added to the list <a href="/cap/<%= list_cap.cap_slug %>"><%= list.not_nil!.title %></a>.
+      <input type="hidden" name="listcap" value="<%= list_cap.cap_slug %>">
     <%- end -%>
-    <form action="/new" method="POST">
-      <%- if list_cap -%>
-        <input type="hidden" name="listcap" value="<%= list_cap.cap_slug %>">
-      <%- end -%>
-      <label for="title">Title:</label>
-      <input name="title" id="title" required maxlength="200">
-      <label for="text-description">Your Proposal:</label>
-      <textarea name="description" id="text-description" required maxlength="20000"></textarea>
-      <label for="duration">Poll Duration:</label>
-      <select id="duration" name="duration">
-        <option value="nil">Indefinite</option>
-        <option value="1">1 hour</option>
-        <option value="24">24 hours</option>
-        <option value="48">48 hours</option>
-        <option value="168">168 hours/one week</option>
-        <option value="672">672 hours/four weeks</option>
-      </select>
-      <br>
-      <button>Go!</button>
-    </form>
-  </section>
-  <%= GLOBAL_FOOTER %>
-</body>
-</html>
+    <label for="title">Title:</label>
+    <input name="title" id="title" required maxlength="200">
+    <label for="text-description">Your Proposal:</label>
+    <textarea name="description" id="text-description" required maxlength="20000"></textarea>
+    <label for="duration">Poll Duration:</label>
+    <select id="duration" name="duration">
+      <option value="nil">Indefinite</option>
+      <option value="1">1 hour</option>
+      <option value="6">6 hours</option>
+      <option value="24">24 hours</option>
+      <option value="48">48 hours</option>
+      <option value="168">168 hours/one week</option>
+      <option value="672">672 hours/four weeks</option>
+    </select>
+    <br>
+    <button>Go!</button>
+  </form>
+</section>

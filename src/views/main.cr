@@ -1,9 +1,9 @@
 get "/" do |env|
-  render "src/ecr/static_index.ecr"
+  tov_render "static_index"
 end
 
 get "/help" do |env|
-  render "src/ecr/static_help.ecr"
+  tov_render "static_help"
 end
 
 get "/new" do |env|
@@ -11,23 +11,23 @@ get "/new" do |env|
   list_cap = fetch_cap(list_param)
   if list_cap && list_cap.kind == CapKind::ListAdmin
     list = DATABASE.query_all("select * from lists where id = ?", list_cap.list_id, as: List)[0]
-    next render "src/ecr/new_poll.ecr"
+    next tov_render "new_poll"
   else
     list_cap = nil
   end
-  render "src/ecr/new_poll.ecr"
+  tov_render "new_poll"
 end
 
 get "/new_list" do |env|
-  render "src/ecr/new_list.ecr"
+  tov_render "new_list"
 end
 
 error 404 do
   error_text = "This URL is unknown, invalid or has been revoked. Sorry."
-  render "src/ecr/cap_invalid.ecr"
+  tov_render "cap_invalid"
 end
 
 error 500 do
   error_text = "Internal server error. Please try again or contact the admin."
-  render "src/ecr/cap_invalid.ecr"
+  tov_render "cap_invalid"
 end

@@ -1,129 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/main.css">
-  <meta property="og:title" content="ToV: <%= cap.kind.to_verb %> <%= poll.title %>" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="<%= og_desc %>"/>
-  <script src="/tov.js"></script>
-  <title>ToV: <%= cap.kind.to_verb %> <%= poll.title %></title>
-</head>
-<body>
-  <%= GLOBAL_HEADER %>
-  
-  <section class="poll-results">
-    <h2><%= poll.title %></h2>
+<% content_for "title" do %>ToV: <%= cap.kind.to_verb %> <%= poll.title %><% end %>
+<% content_for "og_desc" do %>
+  <%- if cap.kind == CapKind::PollAdmin -%>
+    You were supposed to keep this link private, s m h
+  <%- elsif cap.kind == CapKind::PollVote -%>
+    Participate in this poll on Tug of Vote
+  <%- else -%>
+    View this poll on Tug of Vote
+  <%- end -%>
+<% end %>
 
-    <p>
-      <b>The Proposal: </b>
-      <%= content_to_html(poll.description) %>
-    </p>
+<section class="poll-results">
+  <h2><%= poll.title %></h2>
 
-    <div class="votebar <%= votes.empty? ? "novotes" : "" %>">
-      <div class="pro" title="Votes cast in favor" style="flex-grow: <%= (pro_votes[0] + pro_votes[1]).size %>;">+</div>
-      <div class="neu" title="Neutral votes cast" style="flex-grow: <%= (neu_votes[0] + neu_votes[1]).size %>;">~</div>
-      <div class="con" title="Votes cast against" style="flex-grow: <%= (con_votes[0] + con_votes[1]).size %>;">-</div>
+  <p>
+    <b>The Proposal: </b>
+    <%= content_to_html(poll.description) %>
+  </p>
+
+  <div class="votebar <%= votes.empty? ? "novotes" : "" %>">
+    <div class="pro" title="Votes cast in favor" style="flex-grow: <%= (pro_votes[0] + pro_votes[1]).size %>;">+</div>
+    <div class="neu" title="Neutral votes cast" style="flex-grow: <%= (neu_votes[0] + neu_votes[1]).size %>;">~</div>
+    <div class="con" title="Votes cast against" style="flex-grow: <%= (con_votes[0] + con_votes[1]).size %>;">-</div>
+  </div>
+
+  <section class="reasons">
+  <%- [{pro_votes, "In Favor"}, {neu_votes, "Neutral"}, {con_votes, "Against"}].each do |votes, display_name| -%>
+    <% reason_votes = votes[0] %>
+    <% no_reason_votes = votes[1] %>
+    <div>
+    <h2><%= (votes[0]+votes[1]).size %> <%= display_name %></h2>
+    <%- if cap.kind != CapKind::PollViewAnon -%>
+    <ul>
+      <%- reason_votes.each do |vote| -%>
+        <li>
+          <blockquote>
+            <p><%= content_to_html(vote.reason) %></p>
+            <cite><%= vote.username %></cite>
+          </blockquote>
+        </li>
+      <%- end -%>
+      <%- unless no_reason_votes.empty? -%>
+        <li><p>No reason specified: <i><%= no_reason_votes.map{ |x| x.username }.join(", ") %></i></p></li>
+      <%- end -%>
+    </ul>
+    <%- end -%>
     </div>
-
-    <section class="reasons">
-    <%- [{pro_votes, "In Favor"}, {neu_votes, "Neutral"}, {con_votes, "Against"}].each do |votes, display_name| -%>
-      <% reason_votes = votes[0] %>
-      <% no_reason_votes = votes[1] %>
-      <div>
-      <h2><%= (votes[0]+votes[1]).size %> <%= display_name %></h2>
-      <%- if cap.kind != CapKind::PollViewAnon -%>
-      <ul>
-        <%- reason_votes.each do |vote| -%>
-          <li>
-            <blockquote>
-              <p><%= content_to_html(vote.reason) %></p>
-              <cite><%= vote.username %></cite>
-            </blockquote>
-          </li>
-        <%- end -%>
-        <%- unless no_reason_votes.empty? -%>
-          <li><p>No reason specified: <i><%= no_reason_votes.map{ |x| x.username }.join(", ") %></i></p></li>
-        <%- end -%>
-      </ul>
-      <%- end -%>
-      </div>
-    <%- end -%>
-    </section>
-
-    <p class="object-metadata">
-      Created at <%= poll.created_at %>.
-      <%- if poll.duration -%>
-      <span data-js-countdown-to="<%= close_timestamp %>">
-      Voting closes automatically after <%= poll.duration %> hour<%= poll.duration == 1 ? "" : "s" %>.
-      </span>
-      <%- end -%>
-      <br>
-      <%- if cap.kind == CapKind::PollVoteDisabled -%>
-      Voting has ended. You can only view the results now.<br>
-      <%- end -%>
-      <%= 
-        lower_caps
-        .sort_by{|cap| cap.kind }
-        .reverse
-        .map {|cap| "<a href=\"/cap/#{cap.cap_slug}\">#{cap.kind}</a>" }
-        .join(" · ")
-      %>
-      <br>
-      Only share these links with people you trust to use the respective permission.
-    </p>
+  <%- end -%>
   </section>
-  <section class="object-actions">
 
-    <%- if cap.kind == CapKind::PollVote || cap.kind == CapKind::PollAdmin -%>
-      <div class="vote">
-        <h2>Vote</h2>
-        <form action="/cap/<%= cap.cap_slug %>/poll/vote" method="post">
-          <label for="name">Your name</label>
-          <input id="name" placeholder="lain" name="name" required maxlength="42">
-          <label for="password">Password (for later edits)</label>
-          <input id="password" name="password" required maxlength="70">
-          <label for="vote">Your vote</label>
-          <select id="vote" name="vote">
-            <option value="delvote">Delete my vote</option>
-            <option value="infavor">In Favor</option>
-            <option value="neutral">Neutral/Abstain</option>
-            <option value="against">Against</option>
-          </select>
-          <label for="reason">Reason</label>
-          <textarea id="reason" name="reason" maxlength="20000"></textarea>
-          <button>Save</button>
-        </form>
-      </div>
+  <p class="object-metadata">
+    Created at <%= poll.created_at %>.
+    <%- if poll.duration -%>
+    <span data-js-countdown-to="<%= close_timestamp %>">
+    Voting closes automatically after <%= poll.duration %> hour<%= poll.duration == 1 ? "" : "s" %>.
+    </span>
     <%- end -%>
-    
-    <%- if cap.kind == CapKind::PollAdmin -%>
-      <div class="admin">
-        <h2>Admin</h2>
+    <br>
+    <%- if cap.kind == CapKind::PollVoteDisabled -%>
+    Voting has ended. You can only view the results now.<br>
+    <%- end -%>
+    <%= 
+      lower_caps
+      .sort_by{|cap| cap.kind }
+      .reverse
+      .map {|cap| "<a href=\"/cap/#{cap.cap_slug}\">#{cap.kind}</a>" }
+      .join(" · ")
+    %>
+    <br>
+    Only share these links with people you trust to use the respective permission.
+  </p>
+</section>
+<section class="object-actions">
+
+  <%- if cap.kind == CapKind::PollVote || cap.kind == CapKind::PollAdmin -%>
+    <div class="vote">
+      <h2>Vote</h2>
+      <form action="/cap/<%= cap.cap_slug %>/poll/vote" method="post">
+        <label for="name">Your name</label>
+        <input id="name" placeholder="lain" name="name" required maxlength="42">
+        <label for="password">Password (for later edits)</label>
+        <input id="password" name="password" required maxlength="70">
+        <label for="vote">Your vote</label>
+        <select id="vote" name="vote">
+          <option value="delvote">Delete my vote</option>
+          <option value="infavor">In Favor</option>
+          <option value="neutral">Neutral/Abstain</option>
+          <option value="against">Against</option>
+        </select>
+        <label for="reason">Reason</label>
+        <textarea id="reason" name="reason" maxlength="20000"></textarea>
+        <button>Save</button>
+      </form>
+    </div>
+  <%- end -%>
   
-        <p>
-          <a
-            href="/cap/<%= cap.cap_slug %>/poll/end_voting"
-            class="danger"
-            data-js-confirm="Are you sure you want to irreversibly close voting?"
-          >
-            End voting
-          </a>
-        </p>
+  <%- if cap.kind == CapKind::PollAdmin -%>
+    <div class="admin">
+      <h2>Admin</h2>
 
-        <form action="/cap/<%= cap.cap_slug %>/poll/update" method="post">
-          <label for="edit-poll-title">Edit title</label>
-          <input id="edit-poll-title" name="title" value="<%= poll.title %>" required maxlength="200">
-          <label for="edit-poll-textarea">Edit proposal</label>
-          <textarea id="edit-poll-textarea" name="description" required maxlength="20000"><%= poll.description %></textarea>
-          <button>Update poll</button>
-        </form>
-      </div>
-    <%- end -%>
+      <p>
+        <a
+          href="/cap/<%= cap.cap_slug %>/poll/end_voting"
+          class="danger"
+          data-js-confirm="Are you sure you want to irreversibly close voting?"
+        >
+          End voting
+        </a>
+      </p>
 
-  </section>
+      <form action="/cap/<%= cap.cap_slug %>/poll/update" method="post">
+        <label for="edit-poll-title">Edit title</label>
+        <input id="edit-poll-title" name="title" value="<%= poll.title %>" required maxlength="200">
+        <label for="edit-poll-textarea">Edit proposal</label>
+        <textarea id="edit-poll-textarea" name="description" required maxlength="20000"><%= poll.description %></textarea>
+        <button>Update poll</button>
+      </form>
+    </div>
+  <%- end -%>
 
-  <%= GLOBAL_FOOTER %>
-</body>
-</html>
+</section>

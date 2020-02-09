@@ -2,7 +2,7 @@ get "/cap/:cap_slug/list/remove/:target_slug" do |env|
   cap_data = fetch_cap(env.params.url["cap_slug"])
   if cap_data.nil? || cap_data.kind != CapKind::ListAdmin
     error_text = "Unauthorized. "
-    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 403, response: tov_render "cap_invalid"
   end
 
   DATABASE.exec "delete from list_entries where list_id = ? and cap_slug = ?", cap_data.list_id, env.params.url["target_slug"]
@@ -17,13 +17,13 @@ post "/cap/:cap_slug/list/append" do |env|
   cap_data = fetch_cap(env.params.url["cap_slug"])
   if cap_data.nil? || cap_data.kind != CapKind::ListAdmin
     error_text = "Unauthorized. "
-    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 403, response: tov_render "cap_invalid"
   end
 
   cap_slug = env.params.body["cap_url"].lchop(BASE_URL + "/cap/")
   unless fetch_cap(cap_slug)
     error_text = "Unknown or invalid link. "
-    halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 400, response: tov_render "cap_invalid"
   end
 
   DATABASE.exec "insert into list_entries (list_id, cap_slug) values (?,?)", cap_data.list_id, cap_slug
@@ -44,13 +44,13 @@ post "/cap/:cap_slug/list/update" do |env|
   error_text += validate_content(description)
   error_text += validate_url(webhook_url)
   unless error_text.empty?
-    halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 400, response: tov_render "cap_invalid"
   end
 
   cap_data = fetch_cap(env.params.url["cap_slug"])
   if cap_data.nil? || cap_data.kind != CapKind::ListAdmin
     error_text = "Unauthorized. "
-    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 403, response: tov_render "cap_invalid"
   end
 
   DATABASE.exec "update lists set title = ?, description = ?, webhook_url = ? where id = ?", title, description, webhook_url, cap_data.list_id
@@ -65,7 +65,7 @@ get "/cap/:cap_slug/list/regenerate_caps" do |env|
   cap_data = fetch_cap(env.params.url["cap_slug"])
   if cap_data.nil? || cap_data.kind != CapKind::ListAdmin
     error_text = "Unauthorized. "
-    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 403, response: tov_render "cap_invalid"
   end
 
   admin_cap = make_cap()

@@ -1,48 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/main.css">
-  <meta property="og:title" content="Tug of Vote" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="The ToV manual."/>
-  <title>Tug Of Vote</title>
-</head>
-<body>
-  <%= GLOBAL_HEADER %>
-  
-  <section class="content-page">
-    <h2>Manual</h2>
-    <p>
-      This is a tool for simple-to-use collaborative decision-making. If you just got a link asking you to vote in a poll, you can choose a unused name, select whether or not you like the proposal (or whether you're apathetic), optionally add a reason for your stance and send the entire thing off. Because you might change your mind later, you'll also need to set a password. Once you use a name, you can only change the vote associated to that name if you have the password.
-      You don't necessarily need to set an extremely safe password as it is only used for this one per-poll vote-name combination and all people that are even able to see the edit form already have voting access to the poll.
-    </p>
-    <p>
-      If you want to create a poll, go to <a href="/new">this page</a> and fill in your proposal. You can optionally set a duration, after which voting will close automatically. After that, you'll be automagically redirected to your new admin view. Here you can add your own vote and end voting whenever you want to. Ending a poll is irreversible.<br>
-      Further down, in the "Meta" field, you'll see four links. The first one gives access to the admin page. Keep it secret! The second one allows voting on the poll, you can share it to everyone that should be able to vote. The final two ones only allow viewing the poll results, but the last one hides all names and reasons, showing only the outcome. Everyone can see the all links that are lower-tier than their own, the order being Admin&nbsp;→ Vote&nbsp;→ View&nbsp;→ View (Anonymized).
-    </p>
-    <p>
-      Lists allow you to group polls together. You can create a new list <a href="/new_list">here</a>. Once you fill in a title and a description for it, you get redirected to a page where you can add links to polls or other lists to your list.
-      In the "Meta" panel, you'll find two links. The first one is for you and should be kept secret, as it allows access to this admin panel. The other one allows viewing the list, which also means access to all links in it. Share this link extremely carefully!
-      You can add polls to your list either by copying any link to a poll into the list manually using the "append to list" form under "Admin" or by just creating a new poll directly linked to the list using the "Add a new poll to this list" link in the list area.
-      This will redirect you to the new poll form but automatically add the vote link for your new poll into your list.
-      You can also set a Webhook URL in the admin panel. Pasting a slack-compatible incoming webhook into here will notify you via the webhook every time a new poll is added to the list.
-      Finally, you can use "Regenerate Links" to revoke your old links and replace them, in case the links have been compromised. Note that this isn't supported for individual polls yet.
-    </p>
-  </section>
-  <section class="content-page">
-    <h2>Privacy Policy</h2>
-    <p>
-      <strong>What data we collect: </strong> To provide our services, we collect all data you submit, including poll and list descriptions/titles, vote names, reasons and passwords as well as associated timestamps. These are retained indefinitely or until the owner requests their deletion.
-      We also log high-level actions taken, including type of action (creation/deletion/update), type of resource, and in case of votes the associated name. All logs are expunged every 30 days, though aggregated and anonymized statistics may be retained indefinitely.
-    </p>
-    <p>
-      <strong>What we do with this data: </strong> All data is used exclusively for operation of our services. We do not share this data with any third parties with necessary exception of our hosting provider. You can always request deletion or correction of data by contacting <a href="mailto:admin@15318.de">admin@15318.de</a>. We will ask you to prove ownership of the resource you are attempting to alter. Do not send capability URLs via email.
-      If we are asked to access user data by its owner or forced to do to investigate disruption of our service or for legal reasons, we will take utmost care to avoid sensitive information by redacting all data fields not immediately relevant to our inquiry.
-    </p>
-  </section>
+<% content_for "title" do %>ToV: Manual<% end %>
+<% content_for "og_desc" do %>Tug of Vote, a poll service.<% end %>
 
-  <%= GLOBAL_FOOTER %>
-</body>
-</html>
+<section class="content-page">
+  <h2>Manual</h2>
+  <p>
+    This is a tool for simple-to-use collaborative decision-making. If you just got a link asking you to vote in a poll, you can choose a unused name, select whether or not you like the proposal (or whether you're apathetic), optionally add a reason for your stance and send the entire thing off. Because you might change your mind later, you'll also need to set a password. Once you use a name, you can only change the vote associated to that name if you have the password.
+    You don't necessarily need to set an extremely safe password as it is only used for this one per-poll vote-name combination and all people that are even able to see the edit form already have voting access to the poll.
+  </p>
+  <p>
+    If you want to create a poll, go to <a href="/new">this page</a> and fill in your proposal. You can optionally set a duration, after which voting will close automatically. After that, you'll be automagically redirected to your new admin view. Here you can add your own vote and end voting whenever you want to. Ending a poll is irreversible.<br>
+    Further down, in the "Meta" field, you'll see four links. The first one gives access to the admin page. Keep it secret! The second one allows voting on the poll, you can share it to everyone that should be able to vote. The final two ones only allow viewing the poll results, but the last one hides all names and reasons, showing only the outcome. Everyone can see the all links that are lower-tier than their own, the order being Admin&nbsp;→ Vote&nbsp;→ View&nbsp;→ View (Anonymized).
+  </p>
+  <p>
+    Lists allow you to group polls together. You can create a new list <a href="/new_list">here</a>. Once you fill in a title and a description for it, you get redirected to a page where you can add links to polls or other lists to your list.
+    In the "Meta" panel, you'll find two links. The first one is for you and should be kept secret, as it allows access to this admin panel. The other one allows viewing the list, which also means access to all links in it. Share this link extremely carefully!
+    You can add polls to your list either by copying any link to a poll into the list manually using the "append to list" form under "Admin" or by just creating a new poll directly linked to the list using the "Add a new poll to this list" link in the list area.
+    This will redirect you to the new poll form but automatically add the vote link for your new poll into your list.
+    You can also set a Webhook URL in the admin panel. Pasting a slack-compatible incoming webhook into here will notify you via the webhook every time a new poll is added to the list.
+    Finally, you can use "Regenerate Links" to revoke your old links and replace them, in case the links have been compromised. Note that this isn't supported for individual polls yet.
+  </p>
+</section>
+<section class="content-page">
+  <h2>Privacy Policy</h2>
+  <p>
+    <strong>What data we collect: </strong> To provide our services, we collect all data you submit, including poll and list descriptions/titles, vote names, reasons and passwords as well as associated timestamps. These are retained indefinitely or until the owner requests their deletion.
+    We also log high-level actions taken, including type of action (creation/deletion/update), type of resource, and in case of votes the associated name. All logs are expunged every 30 days, though aggregated and anonymized statistics may be retained indefinitely.
+  </p>
+  <p>
+    <strong>What we do with this data: </strong> All data is used exclusively for operation of our services. We do not share this data with any third parties with necessary exception of our hosting provider. You can always request deletion or correction of data by contacting <a href="mailto:admin@15318.de">admin@15318.de</a>. We will ask you to prove ownership of the resource you are attempting to alter. Do not send capability URLs via email.
+    If we are asked to access user data by its owner or forced to do to investigate disruption of our service or for legal reasons, we will take utmost care to avoid sensitive information by redacting all data fields not immediately relevant to our inquiry.
+  </p>
+</section>

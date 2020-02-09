@@ -44,12 +44,7 @@ def validate_duration(val)
 end
 
 def fetch_cap(cap_slug)
-  arr = DATABASE.query_all("select * from caps where cap_slug = ?", cap_slug, as: Cap)
-  if arr.empty?
-    return nil
-  else
-    return arr[0]
-  end
+  DATABASE.query_all("select * from caps where cap_slug = ?", cap_slug, as: Cap)[0]?
 end
 
 def content_to_html(str)
@@ -78,17 +73,6 @@ class ToVLogger < Kemal::BaseLogHandler
   end
 end
 
-GLOBAL_FOOTER = <<-HTML
-<footer>
-  <p>This page is best viewed using curl(1) on a screen resolution of 80×24 characters or better. Uses IBM Plex Sans (<a href="/ofl.txt">License</a>). Brought to you by <a href="https://15318.de">Dingenskirchen Systems</a>. View the <a href="https://github.com/deingithub/tug-of-vote">source code</a> or the <a href="/help">manual</a>.</p>
-  <p>Alternate Colorschemes: <a href="/taraslate.user.css">Tara's Slate</a>. Tug of Vote respects your dark theme preference if set.</p>
-</footer>
-HTML
-
-GLOBAL_HEADER = <<-HTML
-<header>
- <a href="/" class="header-link">Tug Of Vote</a>
- <a href="/new">New Poll</a>
- <a href="/new_list">New List</a>
-</header>
-HTML
+macro tov_render(filename)
+  render "src/ecr/#{{{filename}}}.ecr", "src/ecr/master.ecr"
+end

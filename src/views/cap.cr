@@ -24,5 +24,5 @@ end
 def gen_404(env)
   env.response.status_code = 404
   error_text = "This URL is unknown, invalid or has been revoked. Sorry."
-  render "src/ecr/cap_invalid.ecr"
+  tov_render "cap_invalid"
 end

@@ -11,13 +11,13 @@ post "/cap/:cap_slug/poll/vote" do |env|
   error_text += validate_reason(reason)
   error_text += validate_password(password)
   unless error_text.empty?
-    halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 400, response: tov_render "cap_invalid"
   end
 
   cap_data = fetch_cap(env.params.url["cap_slug"])
   if cap_data.nil? || (cap_data.kind != CapKind::PollVote && cap_data.kind != CapKind::PollAdmin)
     error_text = "Unauthorized. "
-    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 403, response: tov_render "cap_invalid"
   end
 
   votes = DATABASE.query_all("select * from votes where poll_id = ? and username = ?", cap_data.poll_id, name, as: Vote)
@@ -25,7 +25,7 @@ post "/cap/:cap_slug/poll/vote" do |env|
     authorized = Crypto::Bcrypt::Password.new(votes[0].password).verify(password)
     unless authorized
       error_text = "Invalid Password. "
-      halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+      halt env, status_code: 403, response: tov_render "cap_invalid"
     end
   end
 
@@ -33,7 +33,7 @@ post "/cap/:cap_slug/poll/vote" do |env|
   if vote == "delvote"
     if votes.empty?
       error_text = "You can't delete your vote if it hasn't been set before. "
-      halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
+      halt env, status_code: 400, response: tov_render "cap_invalid"
     end
     DATABASE.exec "delete from votes where poll_id = ? and username = ?", cap_data.poll_id, name
 
@@ -60,7 +60,7 @@ get "/cap/:cap_slug/poll/end_voting" do |env|
   cap_data = fetch_cap(env.params.url["cap_slug"])
   if cap_data.nil? || cap_data.kind != CapKind::PollAdmin
     error_text = "Unauthorized. "
-    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 403, response: tov_render "cap_invalid"
   end
 
   DATABASE.exec "update caps set kind = 3 where kind = 4 and poll_id = ?", cap_data.poll_id
@@ -74,7 +74,7 @@ post "/cap/:cap_slug/poll/update" do |env|
   cap_data = fetch_cap(env.params.url["cap_slug"])
   if cap_data.nil? || cap_data.kind != CapKind::PollAdmin
     error_text = "Unauthorized. "
-    halt env, status_code: 403, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 403, response: tov_render "cap_invalid"
   end
 
   title = HTML.escape(env.params.body["title"].as(String))
@@ -83,7 +83,7 @@ post "/cap/:cap_slug/poll/update" do |env|
   error_text += validate_title(title)
   error_text += validate_content(description)
   unless error_text.empty?
-    halt env, status_code: 400, response: render "src/ecr/cap_invalid.ecr"
+    halt env, status_code: 400, response: tov_render "cap_invalid"
   end
 
   DATABASE.exec "update polls set title = ?, description = ? where id = ?", title, description, cap_data.poll_id

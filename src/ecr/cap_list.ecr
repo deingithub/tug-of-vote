@@ -1,89 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/main.css">
-  <meta property="og:title" content="ToV: <%= cap.kind.to_verb %> <%= list.title %>" />
-  <meta property="og:type" content="website" />
-  <meta property="og:description" content="<%= og_desc %>"/>
-  <script src="/tov.js"></script>
-  <title>ToV: <%= cap.kind.to_verb %> <%= list.title %></title>
-</head>
-<body>
-  <%= GLOBAL_HEADER %>
-  
-  <section class="cap-list">
-    <h2><%= list.title %></h2>
-    <p><b>About this list: </b><%= content_to_html(list.description) %></p>
-    <ul>
-      <%- caps.each do |(entry_cap, entry_val)| -%>
-        <li>
-          <a href="/cap/<%= entry_cap.cap_slug %>"><%= entry_cap.kind %></a>:
-          <%= entry_val.title %>
-          <%- if cap.kind == CapKind::ListAdmin -%>
-            <a
-              href="/cap/<%= cap.cap_slug %>/list/remove/<%= entry_cap.cap_slug %>"
-              class="danger"
-              data-js-confirm="Are you sure you want to remove '<%= entry_val.title %>' from this list?"
-            >
-              [remove]
-            </a>
-          <%- end -%>
-        </li>
-      <%- end -%>
-      <%- if cap.kind == CapKind::ListAdmin -%>
-        <li class="add-to-list">
-          <a href="/new?list=<%= cap.cap_slug %>">Add a new poll to this list…</a>
-        </li>
-      <%- end -%>
-    </ul>
-    <p class="object-metadata">
-      Created at <%= list.created_at %>.<br>
-      <%= 
-        lower_caps
-        .sort_by{|cap| cap.kind }
-        .reverse
-        .map {|cap| "<a href=\"/cap/#{cap.cap_slug}\">#{cap.kind}</a>" }
-        .join(" · ")
-      %>
-      <br>
-      Only share these links with people you trust to use the respective permission.
-    </p>
-  </section>
-  <section class="object-actions">
+<% content_for "title" do %>ToV: <%= cap.kind.to_verb %> <%= list.title %><% end %>
+<% content_for "og_desc" do %>
+  <%- if cap.kind == CapKind::ListAdmin -%>
+    You were supposed to keep this link private, s m h
+  <%- else -%>
+    View this list on Tug of Vote
+  <%- end -%>
+<% end %>
 
-    <%- if cap.kind == CapKind::ListAdmin -%>
-      <div>
-        <h2>Admin</h2>
-        <p>
+<section class="cap-list">
+  <h2><%= list.title %></h2>
+  <p><b>About this list: </b><%= content_to_html(list.description) %></p>
+  <ul>
+    <%- caps.each do |(entry_cap, entry_val)| -%>
+      <li>
+        <a href="/cap/<%= entry_cap.cap_slug %>"><%= entry_cap.kind %></a>:
+        <%= entry_val.title %>
+        <%- if cap.kind == CapKind::ListAdmin -%>
           <a
-            href="/cap/<%= cap.cap_slug %>/list/regenerate_caps"
+            href="/cap/<%= cap.cap_slug %>/list/remove/<%= entry_cap.cap_slug %>"
             class="danger"
-            data-js-confirm="Are you sure you want to irreversibly revoke the old links to this list and create new ones?"
+            data-js-confirm="Are you sure you want to remove '<%= entry_val.title %>' from this list?"
           >
-            Regenerate Links
+            [remove]
           </a>
-        </p>
-        <form action="/cap/<%= cap.cap_slug %>/list/update" method="post">
-          <label for="edit-poll-title">Edit title</label>
-          <input id="edit-poll-title" name="title" value="<%= list.title %>" required maxlength="200">
-          <label for="edit-poll-textarea">Edit description</label>
-          <textarea id="edit-poll-textarea" name="description" required maxlength="20000"><%= list.description %></textarea>
-          <label for="edit-poll-webhook-url">Edit Webhook URL</label>
-          <input id="edit-poll-webhook-url" name="webhook_url" value="<%= list.webhook_url %>" maxlength="200">
-          <button>Update list</button>
-        </form>
-        <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">
-          <label for="cap_url">Append Link</label>
-          <input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url" pattern="(<%= BASE_URL%>/cap/)?[a-zA-Z0-9\-_]+">
-          <button>Append to List</button>
-        </form>
-      </div>
+        <%- end -%>
+      </li>
     <%- end -%>
+    <%- if cap.kind == CapKind::ListAdmin -%>
+      <li class="add-to-list">
+        <a href="/new?list=<%= cap.cap_slug %>">Add a new poll to this list…</a>
+      </li>
+    <%- end -%>
+  </ul>
+  <p class="object-metadata">
+    Created at <%= list.created_at %>.<br>
+    <%= 
+      lower_caps
+      .sort_by{|cap| cap.kind }
+      .reverse
+      .map {|cap| "<a href=\"/cap/#{cap.cap_slug}\">#{cap.kind}</a>" }
+      .join(" · ")
+    %>
+    <br>
+    Only share these links with people you trust to use the respective permission.
+  </p>
+</section>
+<section class="object-actions">
 
-  </section>
+  <%- if cap.kind == CapKind::ListAdmin -%>
+    <div>
+      <h2>Admin</h2>
+      <p>
+        <a
+          href="/cap/<%= cap.cap_slug %>/list/regenerate_caps"
+          class="danger"
+          data-js-confirm="Are you sure you want to irreversibly revoke the old links to this list and create new ones?"
+        >
+          Regenerate Links
+        </a>
+      </p>
+      <form action="/cap/<%= cap.cap_slug %>/list/update" method="post">
+        <label for="edit-poll-title">Edit title</label>
+        <input id="edit-poll-title" name="title" value="<%= list.title %>" required maxlength="200">
+        <label for="edit-poll-textarea">Edit description</label>
+        <textarea id="edit-poll-textarea" name="description" required maxlength="20000"><%= list.description %></textarea>
+        <label for="edit-poll-webhook-url">Edit Webhook URL</label>
+        <input id="edit-poll-webhook-url" name="webhook_url" value="<%= list.webhook_url %>" maxlength="200">
+        <button>Update list</button>
+      </form>
+      <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">
+        <label for="cap_url">Append Link</label>
+        <input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url" pattern="(<%= BASE_URL%>/cap/)?[a-zA-Z0-9\-_]+">
+        <button>Append to List</button>
+      </form>
+    </div>
+  <%- end -%>
 
-  <%= GLOBAL_FOOTER %>
-</body>
-</html>
+</section>

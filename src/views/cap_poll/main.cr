@@ -35,5 +35,5 @@ def gen_poll(cap)
   neu_votes = {votes.select { |x| x.kind == VoteKind::Neutral && !x.reason.empty? }, votes.select { |x| x.kind == VoteKind::Neutral && x.reason.empty? }}
   con_votes = {votes.select { |x| x.kind == VoteKind::Against && !x.reason.empty? }, votes.select { |x| x.kind == VoteKind::Against && x.reason.empty? }}
   anonymize = cap.kind == CapKind::PollViewAnon
-  render "src/ecr/cap_poll.ecr"
+  tov_render "cap_poll"
 end
