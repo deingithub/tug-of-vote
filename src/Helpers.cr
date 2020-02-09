@@ -76,3 +76,11 @@ end
 macro tov_render(filename)
   render "src/ecr/#{{{filename}}}.ecr", "src/ecr/master.ecr"
 end
+
+def pluralize(count, singular, plural = nil)
+  if count.abs == 1
+    return "#{count}&nbsp;#{singular}"
+  else
+    return "#{count}&nbsp;#{plural ? plural : singular + "s"}"
+  end
+end

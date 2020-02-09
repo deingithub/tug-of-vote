@@ -24,7 +24,7 @@ function updateCountdown() {
     } else {
         const hours = Math.floor(diff / 60);
         const mins = Math.floor(diff % 60);
-        elem.innerHTML = `Voting ends in ${hours} hour${hours == 1 ? '' : 's'} and ${mins} minute${mins == 1 ? '' : 's'}.`;
+        elem.innerHTML = `Voting ends in ${hours}&nbsp;hour${hours == 1 ? '' : 's'} and ${mins}&nbsp;minute${mins == 1 ? '' : 's'}.`;
         window.setTimeout(updateCountdown, 5000);
     }
 }
