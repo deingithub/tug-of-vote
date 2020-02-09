@@ -9,8 +9,7 @@ get "/cap/:cap_slug/list/remove/:target_slug" do |env|
 
   LOG.info("list##{cap_data.list_id}: #{cap_data.cap_slug} removed entry #{env.params.url["target_slug"]}")
 
-  env.response.status_code = 302
-  env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
+  env.redirect "/cap/#{env.params.url["cap_slug"]}"
 end
 
 post "/cap/:cap_slug/list/append" do |env|
@@ -31,8 +30,7 @@ post "/cap/:cap_slug/list/append" do |env|
   LOG.info("list##{cap_data.list_id}: #{cap_data.cap_slug} added entry #{cap_slug}")
   spawn notify_list_addition(cap_data.list_id, cap_slug)
 
-  env.response.status_code = 302
-  env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
+  env.redirect "/cap/#{env.params.url["cap_slug"]}"
 end
 
 post "/cap/:cap_slug/list/update" do |env|
@@ -57,8 +55,7 @@ post "/cap/:cap_slug/list/update" do |env|
 
   LOG.info("list##{cap_data.list_id}: #{cap_data.cap_slug} updated content")
 
-  env.response.status_code = 303
-  env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
+  env.redirect "/cap/#{env.params.url["cap_slug"]}"
 end
 
 get "/cap/:cap_slug/list/regenerate_caps" do |env|
@@ -77,6 +74,5 @@ get "/cap/:cap_slug/list/regenerate_caps" do |env|
     LOG.info("list##{cap_data.list_id}: #{cap_data.cap_slug} regenerated caps, now #{admin_cap}")
   end
 
-  env.response.status_code = 302
-  env.response.headers.add("Location", "/cap/#{admin_cap}")
+  env.redirect "/cap/#{admin_cap}"
 end

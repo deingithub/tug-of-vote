@@ -52,8 +52,7 @@ post "/cap/:cap_slug/poll/vote" do |env|
     end
   end
 
-  env.response.status_code = 303
-  env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
+  env.redirect "/cap/#{env.params.url["cap_slug"]}"
 end
 
 get "/cap/:cap_slug/poll/end_voting" do |env|
@@ -66,8 +65,7 @@ get "/cap/:cap_slug/poll/end_voting" do |env|
   DATABASE.exec "update caps set kind = 3 where kind = 4 and poll_id = ?", cap_data.poll_id
   LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} closed voting")
 
-  env.response.status_code = 302
-  env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
+  env.redirect "/cap/#{env.params.url["cap_slug"]}"
 end
 
 post "/cap/:cap_slug/poll/update" do |env|
@@ -89,6 +87,5 @@ post "/cap/:cap_slug/poll/update" do |env|
   DATABASE.exec "update polls set title = ?, description = ? where id = ?", title, description, cap_data.poll_id
   LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} updated poll")
 
-  env.response.status_code = 303
-  env.response.headers.add("Location", "/cap/#{env.params.url["cap_slug"]}")
+  env.redirect "/cap/#{env.params.url["cap_slug"]}"
 end

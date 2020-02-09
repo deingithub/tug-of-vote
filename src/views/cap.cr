@@ -8,7 +8,9 @@ get "/cap/:cap_slug" do |env|
   if cap
     case cap.kind
     when CapKind::Revoked
-      next gen_404(env)
+      error_text = "This URL is unknown, invalid or has been revoked. Sorry."
+      halt env, status_code: 404, response: tov_render "cap_invalid"
+      tov_render "cap_invalid"
     when CapKind::ListView, CapKind::ListAdmin
       next gen_list(cap)
     when CapKind::PollAdmin, CapKind::PollVote, CapKind::PollVoteDisabled, CapKind::PollView, CapKind::PollViewAnon
@@ -17,12 +19,8 @@ get "/cap/:cap_slug" do |env|
       raise "Unimplemented CapKind"
     end
   else
-    next gen_404(env)
+    error_text = "This URL is unknown, invalid or has been revoked. Sorry."
+    halt env, status_code: 404, response: tov_render "cap_invalid"
+    tov_render "cap_invalid"
   end
-end
-
-def gen_404(env)
-  env.response.status_code = 404
-  error_text = "This URL is unknown, invalid or has been revoked. Sorry."
-  tov_render "cap_invalid"
 end
