@@ -6,7 +6,7 @@ def notify_list_addition(list_id, vote_cap)
   unless list.webhook_url.empty?
     json = JSON.build do |builder|
       builder.object do
-        builder.field "text", "**New Poll:** #{ENV["BASE_URL"]}/cap/#{vote_cap} @here"
+        builder.field "text", "@everyone **New Poll:** #{ENV["BASE_URL"]}/cap/#{vote_cap}"
       end
     end
     begin
