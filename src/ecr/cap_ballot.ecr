@@ -1,5 +1,13 @@
-<% content_for "title" do %>ToV: Vote on Ballot <%= ballot.title %><% end %>
-<% content_for "og_desc" do %>Cast your vote in this Ballot on Tug of Vote<% end %>
+<% content_for "title" do %>ToV: <%= cap.kind.to_verb %> <%= ballot.title %><% end %>
+<% content_for "og_desc" do %>
+  <%- if cap.kind == CapKind::BallotAdmin -%>
+    You were supposed to keep this link private, s m h
+  <%- elsif cap.kind == CapKind::BallotVote -%>
+    Cast your vote with this ballot on Tug of Vote
+  <%- else -%>
+    View this ballot on Tug of Vote
+  <%- end -%>
+<% end %>
 
 <section class="ballot-results">
   <h2><%= ballot.title %></h2>
