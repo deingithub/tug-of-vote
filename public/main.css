@@ -23,7 +23,8 @@ body a {
   color: #b00;
 }
 
-section.content-page p {
+section.content-page p,
+p.notes {
   max-width: 75ch;
   line-height: 1.4;
 }
@@ -199,11 +200,41 @@ form > button {
   margin-top: 0.3rem;
 }
 
+/* ballots */
+
+.ballot-results ol,
+.vote ul {
+  padding: 0;
+}
+
+.ballot-results ol li,
+.vote ul li {
+  padding: 0.3rem;
+  font-size: 1.3rem;
+  list-style-position: inside;
+  border: 1px solid;
+  margin-bottom: 0.3rem;
+  max-width: 50ch;
+}
+.vote ul li input[type="number"] {
+  width: 3ch;
+  font-size: 1.3rem;
+}
+.vote ul li {
+  list-style: none;
+}
+
 @media screen and (max-width: 60rem) {
   body {
     width: 100%;
     padding: 0 0.3rem;
     box-sizing: border-box;
+  }
+  a.header-link {
+    display: block;
+  }
+  body header a.header-link + a {
+    margin-left: 0;
   }
   .reasons,
   .object-actions {
@@ -229,7 +260,9 @@ form > button {
   body header::after {
     background-color: #f0f0f0;
   }
-  body .object-actions h2 {
+  body .object-actions h2,
+  .ballot-results ol li,
+  .vote ul li {
     border-color: #f0f0f0;
   }
   body a {

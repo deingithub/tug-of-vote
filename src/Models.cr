@@ -1,4 +1,12 @@
 enum CapKind
+  # Administrate Ballot
+  BallotAdmin = 11
+  # Vote in Ballot
+  BallotVote = 10
+  # Vote in Ballot, disabled
+  BallotVoteDisabled = 9
+  # View Ballot
+  BallotView = 8
   # Administrate List
   ListAdmin = 7
   # View List
@@ -18,13 +26,13 @@ enum CapKind
 
   def to_s
     case self
-    when PollAdmin
+    when PollAdmin, BallotAdmin
       "Administrate"
-    when PollVote
+    when PollVote, BallotVote
       "Vote"
-    when PollVoteDisabled
+    when PollVoteDisabled, BallotVoteDisabled
       "Vote (closed)"
-    when PollView
+    when PollView, BallotView
       "View"
     when PollViewAnon
       "View (anonymized)"
@@ -39,9 +47,13 @@ enum CapKind
 
   def to_verb
     case self
+    when BallotAdmin
+      "Administrate Ballot"
+    when BallotView, BallotVoteDisabled
+      "View Ballot"
     when PollAdmin
       "Administrate Poll"
-    when PollVote
+    when PollVote, BallotVote
       "Vote on"
     when PollVoteDisabled, PollView, PollViewAnon
       "View Poll"
@@ -79,12 +91,36 @@ class DBString
   end
 end
 
+class DBList
+  def self.from_rs(rs)
+    rs.read.to_s.split(",").map { |x| Base64.decode_string(x) }
+  end
+
+  def self.serialize(arr)
+    arr.map { |x| Base64.strict_encode(x) }.join(",")
+  end
+end
+
+class DBAssociative
+  def self.from_rs(rs)
+    rs.read.to_s.split(",").map { |x|
+      kv = x.split(":")
+      {Base64.decode_string(kv[0]), Base64.decode_string(kv[1])}
+    }.to_h
+  end
+
+  def self.serialize(hash)
+    hash.to_a.map { |k, v| Base64.strict_encode(k.to_s) + ":" + Base64.strict_encode(v.to_s) }.join(",")
+  end
+end
+
 class Cap
   DB.mapping({
-    cap_slug: String,
-    kind:     {type: CapKind, converter: CapKind},
-    poll_id:  Int64?,
-    list_id:  Int64?,
+    cap_slug:  String,
+    kind:      {type: CapKind, converter: CapKind},
+    poll_id:   Int64?,
+    list_id:   Int64?,
+    ballot_id: Int64?,
   })
 
   def kind_val
@@ -127,5 +163,26 @@ class ListEntry
   DB.mapping({
     list_id:  Int64,
     cap_slug: String,
+  })
+end
+
+class Ballot
+  DB.mapping({
+    id:            Int64,
+    created_at:    String,
+    title:         {type: String, converter: DBString},
+    candidates:    {type: Array(String), converter: DBList},
+    duration:      Int64?,
+    cached_result: {type: Hash(String, String), converter: DBAssociative},
+  })
+end
+
+class BallotVote
+  DB.mapping({
+    ballot_id:   Int64,
+    username:    {type: String, converter: DBString},
+    password:    {type: String, converter: DBString},
+    created_at:  String,
+    preferences: {type: Hash(String, String), converter: DBAssociative},
   })
 end

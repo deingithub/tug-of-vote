@@ -43,6 +43,13 @@ def validate_duration(val)
   return ""
 end
 
+def validate_candidate_list(arr)
+  return "Must have at least two candidates. " if arr.size < 2
+  return "Must not have more than 20 candidates. " if arr.size > 20
+  return "Individual candidates may not exceed 100 characters. " if arr.any? { |x| x.size > 100 }
+  return ""
+end
+
 def fetch_cap(cap_slug)
   DATABASE.query_all("select * from caps where cap_slug = ?", cap_slug, as: Cap)[0]?
 end
@@ -83,4 +90,57 @@ def pluralize(count, singular, plural = nil)
   else
     return "#{count}&nbsp;#{plural ? plural : singular + "s"}"
   end
+end
+
+# TODO add testing to verify, passed some manual tests.
+# Input: All Ballot votes in the form of "Candidate" => Ranking No. (String due to DB)
+# Output: Candidate order in the form of "Candidate" => Other paths beat
+#         The candidate with the highest number wins.
+def calculate_schulze_order(preferences : Array(Hash(String, String))) : Hash(String, Int32)
+  raise "Unreachable" if preferences.empty?
+  candidates = preferences[0].keys
+
+  # build pairwise preferences table
+  pairwise_preferences = Hash(String, Hash(String, Int64)).new(Hash(String, Int64).new(0))
+  candidates.each do |candidate|
+    candidate_preferences = Hash(String, Int64).new(0)
+    preferences.each do |vote|
+      vote.to_a.each do |vote_candidate, vote_order|
+        candidate_preferences[vote_candidate] += 1 if vote_order > vote[candidate]
+      end
+    end
+    pairwise_preferences[candidate] = candidate_preferences
+  end
+
+  # calculate path strengths with an adapted floyd-warshall algorithm
+  # ported from wikipedia: https://en.wikipedia.org/w/index.php?title=Schulze_method&oldid=940574379#Implementation
+  path_strengths = Hash(String, Hash(String, Int64)).new(Hash(String, Int64).new(0))
+  candidates.each do |i|
+    candidates.each do |j|
+      next if i == j
+      path_strengths[i] = Hash(String, Int64).new(0) unless path_strengths[i]?
+      if pairwise_preferences[i][j] > pairwise_preferences[j][i]
+        path_strengths[i][j] = pairwise_preferences[i][j]
+      else
+        path_strengths[i][j] = 0
+      end
+    end
+  end
+  candidates.each do |i|
+    candidates.each do |j|
+      next if i == j
+      candidates.each do |k|
+        next if i == k || j == k
+        path_strengths[j][k] = Math.max(path_strengths[j][k], Math.min(path_strengths[j][i], path_strengths[i][k]))
+      end
+    end
+  end
+
+  # build result hash from strongest paths
+  candidates.map { |candidate|
+    stronger_paths = path_strengths[candidate].to_a.select { |to_candidate, strength|
+      strength > path_strengths[to_candidate][candidate]
+    }
+    {candidate, stronger_paths.size}
+  }.to_h
 end

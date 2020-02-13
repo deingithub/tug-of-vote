@@ -19,11 +19,16 @@
     You can also set a Webhook URL in the admin panel. Pasting a slack-compatible incoming webhook into here will notify you via the webhook every time a new poll is added to the list.
     Finally, you can use "Regenerate Links" to revoke your old links and replace them, in case the links have been compromised. Note that this isn't supported for individual polls yet.
   </p>
+  <p>
+    Ballots are similar to votes, but allow your users greater choice — between up to twenty options, or "candidates". They'll have to give usernames and passwords, like with polls, and then list their order of preference for these candidates (some more details on the voting page itself) ToV will calculate the winning order of candidates according to the <a href="https://en.wikipedia.org/wiki/Schulze_Method" rel="noreferrer">Schulze/beatpath method</a>.
+    To start, go to <a href="/new_ballot">this page</a> and fill in details such as your ballot's title and the list of candidates in the big text area. You can also set it to auto-close voting much like with polls. To ensure the users' protection from the public <em>judging</em> their preferences, Ballots will not display the names of who voted, just the turnout — you will need to verify separately who has voted and who hasn't.<br>
+    Ballots can't be automagically added to lists right now, but you can do it manually with the "Append to List" admin option.
+  </p>
 </section>
 <section class="content-page">
   <h2>Privacy Policy</h2>
   <p>
-    <strong>What data we collect: </strong> To provide our services, we collect all data you submit, including poll and list descriptions/titles, vote names, reasons and passwords as well as associated timestamps. These are retained indefinitely or until the owner requests their deletion.
+    <strong>What data we collect: </strong> To provide our services, we collect all data you submit, including poll, ballot and list descriptions/titles, vote names, reasons and passwords, ballot preference orders as well as associated timestamps. These are retained indefinitely or until the owner requests their deletion.
     We also log high-level actions taken, including type of action (creation/deletion/update), type of resource, and in case of votes the associated name. All logs are expunged every 30 days, though aggregated and anonymized statistics may be retained indefinitely.
   </p>
   <p>
