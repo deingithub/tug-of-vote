@@ -166,7 +166,8 @@ div.votebar.novotes div {
 /* lists */
 
 li.add-to-list {
-  margin-top: 1.3rem;
+  margin-bottom: 1.3rem;
+  list-style: none;
 }
 
 /* forms */

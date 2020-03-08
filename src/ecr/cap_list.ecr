@@ -11,7 +11,12 @@
   <h2><%= list.title %></h2>
   <p><b>About this list: </b><%= content_to_html(list.description) %></p>
   <ul>
-    <%- caps.each do |(entry_cap, entry_val)| -%>
+    <%- if cap.kind == CapKind::ListAdmin -%>
+      <li class="add-to-list">
+        <a href="/new?list=<%= cap.cap_slug %>">Add a new poll to this list…</a>
+      </li>
+    <%- end -%>
+    <%- caps.reverse.each do |(entry_cap, entry_val)| -%>
       <li>
         <a href="/cap/<%= entry_cap.cap_slug %>"><%= entry_cap.kind %></a>:
         <%= entry_val.title %>
@@ -24,11 +29,6 @@
             [remove]
           </a>
         <%- end -%>
-      </li>
-    <%- end -%>
-    <%- if cap.kind == CapKind::ListAdmin -%>
-      <li class="add-to-list">
-        <a href="/new?list=<%= cap.cap_slug %>">Add a new poll to this list…</a>
       </li>
     <%- end -%>
   </ul>
