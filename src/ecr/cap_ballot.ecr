@@ -58,11 +58,11 @@
     <div class="vote">
       <h2>Vote</h2>
       <p class="notes">
-        <em>Notes:</em> Order the candidates in ascending order of preference, i.e. with <em>1</em> as your favorite candidate
+        <em>Notes:</em> Order the candidates in descending order of preference, i.e. with <em>1</em> as your favorite candidate
         and <em><%= ballot.candidates.size %></em> as your least-favorite one. Ties between candidates are allowed.
         You can choose to leave candidates unordered, they'll count as if they were all set to <em><%= ballot.candidates.size + 1%></em>.
         To delete your vote entirely, fill in blanks everywhere.<br>
-        Your order of preference (and your username) will not be displayed publicly, but is visible to the side admin
+        Your order of preference (and your username) will not be displayed publicly, but is visible to the site admin
         and anyone threateningly waving a gun at them.
       </p>
       <form action="/cap/<%= cap.cap_slug %>/ballot/vote" method="post">
