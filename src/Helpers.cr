@@ -106,7 +106,7 @@ def calculate_schulze_order(preferences : Array(Hash(String, String))) : Hash(St
     candidate_preferences = Hash(String, Int64).new(0)
     preferences.each do |vote|
       vote.to_a.each do |vote_candidate, vote_order|
-        candidate_preferences[vote_candidate] += 1 if vote_order > vote[candidate]
+        candidate_preferences[vote_candidate] += 1 if vote_order.to_i > vote[candidate].to_i
       end
     end
     pairwise_preferences[candidate] = candidate_preferences

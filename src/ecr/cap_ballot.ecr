@@ -15,18 +15,16 @@
     Current results, calculated according to <a href="https://en.wikipedia.org/wiki/Schulze_Method" rel="noreferrer">Schulze</a>
     with <%= pluralize(votes.size, "vote") %>:
   </p>
-  
+
   <ol>
-    <%- ballot.cached_result.to_a
-        .group_by(&.[1])
+    <%- ballot.cached_result
         .to_a
-        .sort_by(&.[0])
-        .map {|x|
-          x[1].map(&.[0])
-        }
-        .reverse.each do |candidates|
+        .group_by(&.[1].to_i)
+        .to_a
+        .sort_by(&.[0]).reverse
+        .each do |_, candidates|
     -%>
-      <li><%= candidates.sort.join(" <em>and</em> ") %></li>
+      <li><%= candidates.map(&.[0]).sort.join(" <em>and</em> ") %></li>
     <%- end -%>
   </ol>
 
