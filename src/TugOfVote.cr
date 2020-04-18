@@ -24,7 +24,7 @@ LOG = Logger.new(
 
 LOG.info "Initializing."
 
-DATABASE = DB.open "sqlite3:./tugofvote.db"
+DATABASE = DB.open "sqlite3:#{ENV["DB_FILE"]}"
 DATABASE.exec "PRAGMA foreign_keys = ON"
 
 Kemal.config.logger = ToVLogger.new
