@@ -2,7 +2,7 @@ with import <nixpkgs> {};
 crystal.buildCrystalPackage rec {
   version = "0.1.0";
   pname = "TugOfVote";
-  src = ./src;
+  src = ./.;
 
   shardsFile = ./shards.nix;
   crystalBinaries.TugOfVote.src = "src/TugOfVote.cr";
