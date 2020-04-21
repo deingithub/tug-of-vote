@@ -24,9 +24,16 @@ body a {
 }
 
 section.content-page p,
-p.notes {
+p.notes,
+section.content-page ul li {
   max-width: 75ch;
   line-height: 1.4;
+  text-align: justify;
+}
+
+section.content-page ul li {
+  max-width: 71ch;
+  text-align: justify;
 }
 
 /* layout */
@@ -228,7 +235,7 @@ form > button {
 @media screen and (max-width: 60rem) {
   body {
     width: 100%;
-    padding: 0 0.3rem;
+    padding: 0 0.5rem;
     box-sizing: border-box;
   }
   a.header-link {
