@@ -38,6 +38,8 @@ function fetchUpdates() {
         .then(text => {
             const div = document.createElement("section");
             div.innerHTML = text;
+            // preserve countdown
+            div.querySelector(".object-metadata [data-js-countdown-to]").outerHTML = document.querySelector(".object-metadata [data-js-countdown-to]").outerHTML;
             document.querySelector("section[class$=results]").outerHTML = div.querySelector("section[class$=results]").outerHTML;
             window.setTimeout(fetchUpdates, 5000);
         });
