@@ -11,6 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (document.querySelector("[data-js-countdown-to]")) {
         updateCountdown();
     }
+    if (document.querySelector("section[class$=results]")) {
+        window.setTimeout(fetchUpdates, 5000);
+    }
 });
 
 function updateCountdown() {
@@ -27,4 +30,15 @@ function updateCountdown() {
         elem.innerHTML = `Voting ends in ${hours}&nbsp;hour${hours == 1 ? '' : 's'} and ${mins}&nbsp;minute${mins == 1 ? '' : 's'}.`;
         window.setTimeout(updateCountdown, 5000);
     }
+}
+
+function fetchUpdates() {
+    fetch(window.location)
+        .then(response => response.text())
+        .then(text => {
+            const div = document.createElement("section");
+            div.innerHTML = text;
+            document.querySelector("section[class$=results]").outerHTML = div.querySelector("section[class$=results]").outerHTML;
+            window.setTimeout(fetchUpdates, 5000);
+        });
 }
