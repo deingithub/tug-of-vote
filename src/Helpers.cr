@@ -45,7 +45,7 @@ end
 
 def validate_candidate_list(arr)
   return "Must have at least two candidates. " if arr.size < 2
-  return "Must not have more than 20 candidates. " if arr.size > 20
+  return "Must not have more than 50 candidates. " if arr.size > 50
   return "Individual candidates may not exceed 100 characters. " if arr.any? { |x| x.size > 100 }
   return ""
 end
