@@ -66,7 +66,7 @@
       <form action="/cap/<%= cap.cap_slug %>/ballot/vote" method="post">
         <label for="name">Your name</label>
         <input id="name" placeholder="lain" name="name" required="" maxlength="42">
-        <label for="password">Password (for later edits)</label>
+        <label for="password">PIN</label>
         <input id="password" name="password" required="" maxlength="70">    
         <ul>
           <%- ballot.candidates.sort.each do |candidate| -%>
