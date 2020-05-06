@@ -23,9 +23,9 @@ body a {
   color: #b00;
 }
 
-section.content-page p,
+.content-page p,
 p.notes,
-section.content-page ul li {
+.content-page ul li {
   max-width: 75ch;
   line-height: 1.4;
   text-align: justify;
@@ -239,7 +239,7 @@ form button {
 
 .cap-doc {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 80ch 1fr;
   grid-column-gap: 1rem;
 }
 .cap-doc article p {
@@ -292,6 +292,8 @@ form button {
 }
 .cap-doc article[contenteditable] p {
   margin: 0;
+  text-align: left;
+  max-width: unset;
 }
 
 @media screen and (max-width: 60rem) {

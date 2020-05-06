@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
         submitDocButton.addEventListener("click", function (event) {
             event.preventDefault();
             if (window.tov.old_rev_text) {
-                document.querySelector('.revision input[name="new-rev"]').value = document.querySelector(".cap-doc article[contenteditable]").innerText;
+                document.querySelector('.revision input[name="new-rev"]').value = document.querySelector(".cap-doc article[contenteditable]").innerText.replace("\r\n\r\n", "\r\n");
                 document.querySelector('.revision input[name="parent-rev"]').value = window.tov.displayed_rev || "";
             }
             document.querySelector('.revision input[name="name"]').value = document.querySelector(".iam input#name").value;
