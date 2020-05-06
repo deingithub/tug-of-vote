@@ -7,20 +7,25 @@
 @license        CC0
 ==/UserStyle== */
 @-moz-document domain("tov.15318.de") {
-  body, body a {
-      color: #fff;
-      background-color: #4a525a;
+  body,
+  body a {
+    color: #fff;
+    background-color: #4a525a;
   }
   .danger {
-      color: #b33;
+    color: #b33;
   }
   body header::after {
-      background: #fff;
+    background: #fff;
   }
-  .poll-actions h2 {
-      border-color: #fff;
+  .poll-actions h2,
+  p.object-metadata,
+  .cap-doc ol li,
+  .ballot-results ol li,
+  .vote ul li {
+    border-color: #fff;
   }
   .votebar div {
-      color: #4a525a;
+    color: #4a525a;
   }
 }

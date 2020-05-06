@@ -192,7 +192,7 @@ function fetchPollBallotUpdates() {
             // preserve countdown
             div.querySelector(".object-metadata [data-js-countdown-to]").outerHTML = document.querySelector(".object-metadata [data-js-countdown-to]").outerHTML;
             document.querySelector("section[class$=results]").outerHTML = div.querySelector("section[class$=results]").outerHTML;
-            window.setTimeout(fetchUpdates, 5000);
+            window.setTimeout(fetchPollBallotUpdates, 5000);
         });
 }
 

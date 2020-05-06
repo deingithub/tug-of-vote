@@ -338,7 +338,8 @@ form button {
   }
   body .object-actions h2,
   .ballot-results ol li,
-  .vote ul li {
+  .vote ul li,
+  .cap-doc ol li {
     border-color: #f0f0f0;
   }
   body a {
