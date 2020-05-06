@@ -117,6 +117,24 @@ post "/new_ballot" do |env|
   env.response.headers.add("Location", "/cap/#{admin_cap}")
 end
 
+post "/new_doc" do |env|
+  title = HTML.escape(env.params.body["title"].as(String))
+  error_text = ""
+  error_text += validate_title(title)
+  unless error_text.empty?
+    halt env, status_code: 400, response: tov_render "cap_invalid"
+  end
+  edit_cap = make_cap()
+  DATABASE.transaction do |trans|
+    c = trans.connection
+    doc_id = c.exec("insert into docs (title) values (?)", title).last_insert_id
+    c.exec("insert into caps (cap_slug, kind, doc_id) values (?,?,?)", edit_cap, CapKind::DocEdit.value, doc_id)
+    c.exec("insert into caps (cap_slug, kind, doc_id) values (?,?,?)", make_cap, CapKind::DocView.value, doc_id)
+    LOG.info("doc##{doc_id}: #{edit_cap} created")
+  end
+  env.redirect "/cap/#{edit_cap}"
+end
+
 def make_cap
   Random::Secure.urlsafe_base64
 end

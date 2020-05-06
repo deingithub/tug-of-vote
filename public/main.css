@@ -42,6 +42,9 @@ body {
   width: 75%;
   margin: 0 auto;
 }
+body.wide {
+  width: 95%;
+}
 
 body footer {
   font-size: 0.7rem;
@@ -183,29 +186,29 @@ form + form {
   margin-top: 1rem;
 }
 
-form > label {
+form label {
   display: block;
 }
 
-form > label:not(:first-child) {
+form label:not(:first-child) {
   margin-top: 0.3rem;
 }
 
-form > textarea {
+form textarea {
   height: 10ch;
   font-size: 0.9rem;
 }
 
-form > input,
-form > textarea {
+form input,
+form textarea {
   width: 100%;
   box-sizing: border-box;
   display: block;
   max-width: 100ch;
 }
 
-form > button {
-  margin-top: 0.3rem;
+form button {
+  margin: 0.3rem 0;
 }
 
 /* ballots */
@@ -230,6 +233,65 @@ form > button {
 }
 .vote ul li {
   list-style: none;
+}
+
+/* docs */
+
+.cap-doc {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-column-gap: 1rem;
+}
+.cap-doc article p {
+  margin-top: 0;
+}
+.cap-doc article {
+  text-align: justify;
+}
+.cap-doc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cap-doc ol li {
+  padding: 0.3rem;
+  border: 1px solid black;
+  margin-bottom: 1rem;
+}
+.cap-doc ol.req-in-flight li {
+  color: gray;
+  border-color: gray;
+}
+.cap-doc ol li .votebar div {
+  font-size: 1.3rem;
+  min-width: 2ch;
+}
+.iam form {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1% 1fr;
+  grid-column-gap: 1rem;
+}
+.iam form input {
+  grid-row: 2;
+}
+.iam form label {
+  grid-row: 1;
+}
+.cap-doc ol li summary,
+[data-js-react-rev-pro],
+[data-js-react-rev-neu],
+[data-js-react-rev-con] {
+  cursor: pointer;
+}
+.cap-doc article[contenteditable] {
+  border: 1px solid black;
+  font-family: monospace;
+  font-size: 0.9rem;
+  padding: 0.3rem;
+}
+.cap-doc article[contenteditable] p {
+  margin: 0;
 }
 
 @media screen and (max-width: 60rem) {
@@ -257,6 +319,12 @@ form > button {
   textarea,
   button {
     font-size: 1rem;
+  }
+  .cap-doc {
+    display: block;
+  }
+  .cap-doc article[contenteditable] {
+    margin-bottom: 1rem;
   }
 }
 

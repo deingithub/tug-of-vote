@@ -1,4 +1,8 @@
 enum CapKind
+  # Edit Document
+  DocEdit = 21
+  # View Document
+  DocView = 20
   # Administrate Ballot
   BallotAdmin = 11
   # Vote in Ballot
@@ -32,7 +36,7 @@ enum CapKind
       "Vote"
     when PollVoteDisabled, BallotVoteDisabled
       "Vote (closed)"
-    when PollView, BallotView
+    when PollView, BallotView, DocView
       "View"
     when PollViewAnon
       "View (anonymized)"
@@ -40,6 +44,8 @@ enum CapKind
       "Administrate List"
     when ListView
       "View List"
+    when DocEdit
+      "Edit"
     when Revoked
       "(Revoked)"
     end
@@ -61,6 +67,10 @@ enum CapKind
       "Administrate List"
     when ListView
       "View List"
+    when DocEdit
+      "Edit Doc"
+    when DocView
+      "View Doc"
     when Revoked
       "(Revoked)"
     end
@@ -121,6 +131,7 @@ class Cap
     poll_id:   Int64?,
     list_id:   Int64?,
     ballot_id: Int64?,
+    doc_id:    Int64?,
   })
 
   def kind_val
@@ -184,5 +195,42 @@ class BallotVote
     password:    {type: String, converter: DBString},
     created_at:  String,
     preferences: {type: Hash(String, String), converter: DBAssociative},
+  })
+end
+
+class Doc
+  DB.mapping({
+    id:         Int64,
+    created_at: String,
+    title:      {type: String, converter: DBString},
+  })
+end
+
+class DocUser
+  DB.mapping({
+    doc_id:   Int64,
+    username: {type: String, converter: DBString},
+    password: {type: String, converter: DBString},
+  })
+end
+
+class DocRevision
+  DB.mapping({
+    id:                 Int64,
+    doc_id:             Int64,
+    created_at:         String,
+    comment:            {type: String, converter: DBString},
+    revision_diff:      {type: String, converter: DBString, nilable: true},
+    parent_revision_id: Int64?,
+    username:           {type: String, converter: DBString},
+  })
+end
+
+class DocRevisionReaction
+  DB.mapping({
+    doc_id:      Int64,
+    revision_id: Int64,
+    username:    {type: String, converter: DBString},
+    kind:        {type: VoteKind, converter: VoteKind},
   })
 end

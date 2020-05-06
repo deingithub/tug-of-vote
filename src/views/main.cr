@@ -26,6 +26,10 @@ get "/new_ballot" do |env|
   tov_render "new_ballot"
 end
 
+get "/new_doc" do |env|
+  tov_render "new_doc"
+end
+
 error 404 do
   error_text = "This URL is unknown, invalid or has been revoked. Sorry."
   tov_render "cap_invalid"

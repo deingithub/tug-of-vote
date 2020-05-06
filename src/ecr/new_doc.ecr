@@ -1,0 +1,12 @@
+<% content_for "title" do %>Tug of Vote<% end %>
+<% content_for "og_desc" do %>Tug of Vote, a poll service.<% end %>
+
+<section>
+  <h2>Create new Doc</h2>
+  <form action="/new_doc" method="POST">
+    <label for="title">Title:</label>
+    <input name="title" id="title" required maxlength="200">
+    <br>
+    <button>Go!</button>
+  </form>
+</section>

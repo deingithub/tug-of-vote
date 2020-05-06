@@ -28,4 +28,9 @@ DATABASE = DB.open "sqlite3:#{ENV["DB_FILE"]}"
 DATABASE.exec "PRAGMA foreign_keys = ON"
 
 Kemal.config.logger = ToVLogger.new
+
+after_all do |ctx|
+  ctx.response.headers.add("Content-Type", "text/html; charset=utf-8")
+end
+
 Kemal.run ENV["PORT"].to_i

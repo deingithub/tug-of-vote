@@ -1,3 +1,6 @@
+# Shards dependency resolution is hopelessly broken and OOMs.
+# Refer to shards.nix for up to date dependencies.
+
 name: TugOfVote
 version: 0.1.0
 

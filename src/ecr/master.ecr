@@ -10,12 +10,13 @@
   <script src="/tov.js"></script>
   <title><%= yield_content "title" %></title>
 </head>
-<body>
+<body <%= yield_content "body_args" %> >
   <header>
     <a href="/" class="header-link">Tug Of Vote</a>
     <a href="/new">New Poll</a>
     <a href="/new_ballot">New Ballot</a>
     <a href="/new_list">New List</a>
+    <a href="/new_doc">New Doc</a>
     <a href="/help">Manual</a>
   </header>
 

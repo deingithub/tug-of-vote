@@ -1,0 +1,153 @@
+<% content_for "title" do %>ToV: <%= cap.kind.to_verb %> <%= doc.title %><% end %>
+<% content_for "og_desc" do %>
+  <%- if cap.kind == CapKind::DocEdit -%>
+    Edit this Doc on Tug of Vote
+  <%- else -%>
+    View this Doc on Tug of Vote
+  <%- end -%>
+<% end %>
+<% content_for "body_args" do %>class="wide"<% end %>
+
+<h2><%= doc.title %></h2>
+<section class="cap-doc">
+  <article class="active-rev">
+    <p>Something will show up here once you select a revision.</p>
+  </article>
+  <ol class="revs">
+  <li>
+    <%= pluralize(revisions.reject{ |x| (x.revision_diff || "").empty? }.size, "revision") %> in total.
+    [<a href="#" data-js-expand-all-revs>Expand All</a>]
+    [<a href="#" data-js-collapse-all-revs>Collapse All</a>]
+    [<a href="#" data-js-refresh-revs>Refresh List</a>]
+    <noscript><br><em>These features require JavaScript to work.</em></noscript>
+  </li>
+  <%- revisions.each do |rev| -%>
+    <%-
+      reacts = [VoteKind::InFavor, VoteKind::Neutral, VoteKind::Against].map do |kind|
+        reactions.select{|x| x.revision_id == rev.id && x.kind == kind }
+      end
+    -%>
+    <li><details>
+      <summary>
+        <%= rev.id %>] <%= rev.username %>
+        <em>
+        <%- unless (rev.revision_diff || "").empty? -%>
+          Revision
+          [<a data-js-focus-rev href="/cap/<%= cap.cap_slug %>/doc/revs/<%= rev.id %>" target="_blank">View</a>]
+        <%- else -%>
+          Comment 
+        <%- end -%>
+        </em>
+      </summary>
+      <p>
+        <%= rev.comment %>
+      </p>
+      <p>
+        Created at <%= rev.created_at %>.<br>
+        Reactions, <em>in favor:</em> <%= reacts[0].empty? ? "none" : reacts[0].map{|x| x.username}.join(", ")  %>.
+        <em>Neutral,</em> <%= reacts[1].empty? ? "none" : reacts[1].map{|x| x.username}.join(", ") %>.
+        <em>Against,</em> <%= reacts[2].empty? ? "none" : reacts[2].map{|x| x.username}.join(", ") %>.
+      </p>
+      <div class="votebar <%= reacts.all?{ |x| x.empty? } ? "novotes" : "" %>">
+        <div class="pro" title="Votes cast in favor" style="flex-grow: <%= reacts[0].size %>;"
+          <%- if cap.kind == CapKind::DocEdit -%> data-js-react-rev-pro="<%= rev.id %>" <%- end -%>
+        >
+          <%= reacts[0].size -%>
+        </div>
+        <div class="neu" title="Neutral votes cast" style="flex-grow: <%= reacts[1].size %>;"
+          <%- if cap.kind == CapKind::DocEdit -%> data-js-react-rev-neu="<%= rev.id %>" <%- end -%>
+        >
+          <%= reacts[1].size -%>
+        </div>
+        <div class="con" title="Votes cast against" style="flex-grow: <%= reacts[2].size %>;"
+          <%- if cap.kind == CapKind::DocEdit -%> data-js-react-rev-con="<%= rev.id %>" <%- end -%>
+        >
+          <%= reacts[2].size -%>
+        </div>
+      </div>
+    </details></li>
+  <%- end -%>
+  <%- if cap.kind == CapKind::DocEdit -%>
+  <noscript><li><em>React to a revision using this form. To delete, vote again for whatever you chose first.</em>
+    <form action="/cap/<%= cap.cap_slug %>/doc/react" method="post">
+      <label for="react-name">Your name</label>
+      <input id="react-name" placeholder="Oma Desala" name="name" required maxlength="42">
+      <label for="react-password">PIN</label>
+      <input id="react-password" name="password" required maxlength="70">
+      <label for="rev-id">Revision ID</label>
+      <input id="rev-id" name="rev-id">
+      <label for="react">Your reaction</label>
+      <select id="react" name="react">
+        <option value="infavor">Support</option>
+        <option value="neutral">Neutral</option>
+        <option value="against">Oppose</option>
+      </select>
+      <button>Save</button>
+    </form>
+  </li></noscript>
+  <%- end -%>
+  </ol>
+</section>
+
+<p class="object-metadata">
+  Created at <%= doc.created_at %>.<br>
+  <%= 
+      lower_caps
+      .sort_by{|cap| cap.kind }
+      .reverse
+      .map {|cap| "<a href=\"/cap/#{cap.cap_slug}\">#{cap.kind}</a>" }
+      .join(" · ")
+  %>
+  <br>
+  Only share these links with people you trust to use the respective permission.
+</p>
+
+<%- if cap.kind == CapKind::DocEdit -%>
+<section class="object-actions">
+  <div class="iam">
+    <h2>I am…</h2>
+    <form>
+      <label for="name">Your name</label>
+      <input id="name" placeholder="Oma Desala" name="name" required maxlength="42">
+      <label for="password">PIN</label>
+      <input id="password" name="password" required maxlength="70">
+    </form>
+    <p>
+      <em>These credentials will be used for all actions you take on this page.</em>
+      <noscript><br><em>Well, they would, if only you had enabled JavaScript.</em></noscript>
+    </p>
+  </div>
+  <div class="revision">
+    <h2>Edit</h2>
+    <form action="/cap/<%= cap.cap_slug %>/doc/edit" method="post">
+      <noscript>
+        <label for="edit-name">Your name</label>
+        <input id="edit-name" placeholder="Oma Desala" name="nojs-name" required maxlength="42">
+        <label for="edit-password">PIN</label>
+        <input id="edit-password" name="nojs-password" required maxlength="70">
+      </noscript>
+
+      <label for="enable-editing">Add a revision</label>
+      <button id="enable-editing" type="button" data-js-enable-doc-editing>Edit currently displayed revision</button>
+
+      <input type="hidden" name="name">
+      <input type="hidden" name="password">
+      <input type="hidden" name="new-rev">
+      <input type="hidden" name="parent-rev">
+
+      <label for="comment">Comment</label>
+      <textarea id="comment" name="comment" maxlength="20000"></textarea>
+
+      <noscript>
+        <p><em>The following two fields allow you to select a revision to base your new revision on and to enter the updated text.</em></p>
+        <label for="nojs-new-rev">Updated content</label>
+        <textarea id="nojs-new-rev" name="new-rev" maxlength="20000"></textarea>
+        <label for="nojs-parent-rev">Parent Revision ID</label>
+        <input id="nojs-parent-rev" name="parent-rev">
+      </noscript>
+
+      <button data-js-doc-submit>Save</button>
+    </form>
+  </div>
+</section>
+<%- end -%>

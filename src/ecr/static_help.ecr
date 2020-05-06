@@ -3,12 +3,12 @@
 
 <section class="content-page">
   <h2>Manual</h2>
-  <h3>Overview</h3>
+  <h3 id="toc-overview">Overview</h3>
   <p>
     Welcome to Tug of Vote! This is a tool for simple-to-use team-based decisionmaking.
     It enables you to easily perform both pro/contra and ranked-choice votes between <em>mutually trusting</em> individuals.
   </p>
-  <h3>Voting</h3>
+  <h3 id="toc-voting">Voting</h3>
   <p>
     This is most likely why you're here. To vote in a poll you've been sent, go to the bottom of the page to a section labeled "Vote".
     If it's missing, this means that either the time on the poll has run out or that the person you got screwed up and sent you the wrong link.
@@ -30,7 +30,7 @@
       </li>
     </ul>
   </p>
-  <h3>Creating</h3>
+  <h3 id="toc-creating">Creating</h3>
   <p>
     You can create a pro/contra poll on <a href="/new">this page</a>. You'll need to fill the proposal to be voted on and optionally a duration,
     after which voting will close automatically. After that, you'll be automagically redirected to your new admin view. Here you can add your own
@@ -61,18 +61,45 @@
     every time a new poll is added to the list. If you use Discord, append <code>/slack</code> to the link you got from Discord.<br>
     Finally, you can use "Regenerate Links" to revoke your old links and replace them, in case the links to the list have been compromised.
   </p>
+  <h3 id="toc-docs">Docs</h3>
   <p>
-    
+    A Tug of Vote Doc is a collaborative revision-based document. Think of it a bit like a Wikipedia article, except with less citations and
+    accessible solely to people you hand the viewing/editing links (and, of course, me, as detailed in the privacy policy below). If you open
+    a Doc, you'll have a split interface. To the left, a revision of the document can be displayed and edited inline. The list of available
+    revisions is immediately to the right, collapsed by default to take up less space.
+  </p>
+  <p>
+    There are three ways to participate in a Doc: Commenting, Revising, and Reacting. For all three of them, you'll need a name and a PIN, which
+    you can enter in the bottom left. Your credentials are only valid for the current Doc.
+    <ul>
+      <li>To comment, enter a comment in the bottom-right form and hit "Save", it'll add a new item to the revision list.</li>
+      <li>To react, click on the Poll-inspired vote bar fields below each revision or comment. You can modify your vote at any time; to delete it
+      entirely, simply re-vote for the same option.</li>
+      <li>To add a revision, first select the revision you want to base yours on by making it active in the view area. Then click the bottom right
+      form's "Edit active revision" button to enable editing for the display area. Make your desired changes and summarize them in the comment field,
+      then hit "Save". The revision list should refresh with your new revision, which you can promptly select to be displayed. Note that this will
+      warn you to not accidentally discard your edits, if the revision is there, however, you can safely disregard this.</li>
+    </ul>
+  </p>
+  <p>
+    You can get a permalink to a specific revision by sharing the "View" link (on Desktop, right click and select "Copy Link") from the revision list.
+    This will initially only display the revision itself, but also features a link to return to the full view.
   </p>
 </section>
 <section class="content-page">
   <h2>Privacy Policy</h2>
   <p>
-    <strong>What data we collect: </strong> To provide our services, we collect all data you submit, including poll, ballot and list descriptions/titles, vote names, reasons and passwords, ballot preference orders as well as associated timestamps. These are retained indefinitely or until the owner requests their deletion.
-    We also log high-level actions taken, including type of action (creation/deletion/update), type of resource, and in case of votes the associated name. All logs are expunged every 30 days, though aggregated and anonymized statistics may be retained indefinitely.
+    <strong>What data we collect: </strong> To provide our services, we collect all data you submit, including poll, ballot and list descriptions/titles,
+    vote names, reasons and passwords, ballot preference orders, doc revisions, comments, and reactions, as well as associated timestamps. These are retained
+    indefinitely or until the owner requests their deletion. We also log high-level actions taken, including type of action (creation/deletion/update), type
+    of resource, and in case of votes or revisions the associated name. All logs are expunged every 30 days, though aggregated and anonymized statistics may
+    be retained indefinitely.
   </p>
   <p>
-    <strong>What we do with this data: </strong> All data is used exclusively for operation of our services. We do not share this data with any third parties with necessary exception of our hosting provider. You can always request deletion or correction of data by contacting <a href="mailto:admin@15318.de">admin@15318.de</a>. We will ask you to prove ownership of the resource you are attempting to alter. Do not send capability URLs via email.
-    If we are asked to access user data by its owner or forced to do to investigate disruption of our service or for legal reasons, we will take utmost care to avoid sensitive information by redacting all data fields not immediately relevant to our inquiry.
+    <strong>What we do with this data: </strong> All data is used exclusively for operation of our services. We do not share this data with any third parties
+    with necessary exception of our hosting provider. You can always request deletion or correction of data by contacting
+    <a href="mailto:admin@15318.de">admin@15318.de</a>. We will ask you to prove ownership of the resource you are attempting to alter.
+    Do not send capability URLs via email. If we are asked to access user data by its owner or forced to do to investigate disruption of our service or
+    for legal reasons, we will take utmost care to avoid sensitive information by redacting all data fields not immediately relevant to our inquiry.
   </p>
 </section>

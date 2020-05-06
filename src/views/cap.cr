@@ -4,6 +4,8 @@ require "./cap_list/main"
 require "./cap_list/actions"
 require "./cap_ballot/main"
 require "./cap_ballot/actions"
+require "./cap_doc/main"
+require "./cap_doc/actions"
 
 get "/cap/:cap_slug" do |env|
   cap = fetch_cap(env.params.url["cap_slug"])
@@ -19,6 +21,8 @@ get "/cap/:cap_slug" do |env|
       next gen_poll(cap)
     when CapKind::BallotAdmin, CapKind::BallotVote, CapKind::BallotVoteDisabled, CapKind::BallotView
       next gen_ballot(cap)
+    when CapKind::DocEdit, CapKind::DocView
+      next gen_doc(cap)
     else
       raise "Unimplemented CapKind"
     end
