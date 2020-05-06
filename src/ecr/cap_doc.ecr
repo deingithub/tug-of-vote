@@ -40,7 +40,7 @@
         </em>
       </summary>
       <p>
-        <%= rev.comment %>
+        <%= content_to_html(rev.comment) %>
       </p>
       <p>
         Created at <%= rev.created_at %>.<br>
