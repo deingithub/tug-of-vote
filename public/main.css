@@ -228,8 +228,9 @@ form button {
   max-width: 50ch;
 }
 .vote ul li input[type="number"] {
-  width: 3ch;
+  width: 4ch;
   font-size: 1.3rem;
+  display: inline-block;
 }
 .vote ul li {
   list-style: none;
