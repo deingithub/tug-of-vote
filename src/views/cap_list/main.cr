@@ -12,8 +12,8 @@ def gen_list(cap)
   end
   caps = raw_caps.map do |cap|
     if cap.list_id
-      list = DATABASE.query_all("select * from lists where id = ?", cap.list_id, as: List)[0]
-      next {cap, list}
+      my_list = DATABASE.query_all("select * from lists where id = ?", cap.list_id, as: List)[0]
+      next {cap, my_list}
     elsif cap.poll_id
       poll = DATABASE.query_all("select * from polls where id = ?", cap.poll_id, as: Poll)[0]
       next {cap, poll}
