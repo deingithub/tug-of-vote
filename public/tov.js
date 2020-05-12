@@ -20,11 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Set up Docs UI
-    setUpRevListUI();
+    if (document.querySelector(".cap-doc")) {
+        setUpRevListUI();
 
-    const editDocButton = document.querySelector("[data-js-enable-doc-editing]");
-    if (editDocButton) {
-        editDocButton.addEventListener("click", function (event) {
+        document.querySelector("[data-js-enable-doc-editing]").addEventListener("click", function (event) {
             event.preventDefault();
             const revbox = document.querySelector(".cap-doc article");
             if (revbox.hasAttribute("contenteditable") && window.confirm("This will irretrievably discard the edits you've made so far. Proceed?")) {
@@ -38,11 +37,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 event.target.innerText = "Revert edits";
             }
         });
-    }
 
-    const submitDocButton = document.querySelector("[data-js-doc-submit]");
-    if (submitDocButton) {
-        submitDocButton.addEventListener("click", function (event) {
+        document.querySelector("[data-js-doc-submit]").addEventListener("click", function (event) {
             event.preventDefault();
             if (window.tov.old_rev_text) {
                 document.querySelector('.revision input[name="new-rev"]').value = document.querySelector(".cap-doc article[contenteditable]").innerText.replace("\r\n\r\n", "\r\n");
@@ -190,8 +186,12 @@ function fetchPollBallotUpdates() {
             const div = document.createElement("section");
             div.innerHTML = text;
             // preserve countdown
-            div.querySelector(".object-metadata [data-js-countdown-to]").outerHTML = document.querySelector(".object-metadata [data-js-countdown-to]").outerHTML;
-            document.querySelector("section[class$=results]").outerHTML = div.querySelector("section[class$=results]").outerHTML;
+            const countdownSelector = ".object-metadata [data-js-countdown-to]";
+            if (div.querySelector(countdownSelector)) {
+                div.querySelector(countdownSelector).outerHTML = document.querySelector(countdownSelector).outerHTML;
+            }
+            const resultSelector = "section[class$=results]";
+            document.querySelector(resultSelector).outerHTML = div.querySelector(resultSelector).outerHTML;
             window.setTimeout(fetchPollBallotUpdates, 5000);
         });
 }
