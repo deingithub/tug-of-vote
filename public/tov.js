@@ -41,7 +41,17 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelector("[data-js-doc-submit]").addEventListener("click", function (event) {
             event.preventDefault();
             if (window.tov.old_rev_text) {
-                document.querySelector('.revision input[name="new-rev"]').value = document.querySelector(".cap-doc article[contenteditable]").innerText.replace("\r\n\r\n", "\r\n");
+                var newRev = document.querySelector(".cap-doc article[contenteditable]").innerText;
+
+                // This is incomprehensibly cursed.
+                // I do not understand why this is necessary.
+                // I have given up trying to understand why this is necessary. 
+                // I would not wish dealing with this utterly disgusting mess
+                // upon Brendan Eich himself.
+                newRev = newRev.replace(/(?:\r?\n){2}/g, "\n");
+                newRev = newRev.replace(/(?:\r?\n){3}/g, "\n\n");
+
+                document.querySelector('.revision input[name="new-rev"]').value = newRev;
                 document.querySelector('.revision input[name="parent-rev"]').value = window.tov.displayed_rev || "";
             }
             document.querySelector('.revision input[name="name"]').value = document.querySelector(".iam input#name").value;
@@ -61,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.querySelector(".cap-doc article").innerHTML = "Something will show up here once you select a revision.";
                     document.querySelector(".cap-doc article").removeAttribute("contenteditable");
                     document.querySelector("[data-js-enable-doc-editing]").innerText = "Edit currently displayed revision";
+                    document.querySelector(".revision textarea#comment").innerText = "";
                 }
             );
         });
