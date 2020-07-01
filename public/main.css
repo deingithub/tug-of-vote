@@ -259,7 +259,7 @@ form select {
 .iam {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1% 1fr;
+  grid-template-rows: 1 1fr;
   grid-column-gap: 1rem;
 }
 .iam input {
@@ -428,5 +428,24 @@ form select {
   }
   div.votebar div {
     color: #16161d;
+  }
+  form button,
+  form select,
+  form textarea,
+  form input {
+    border-color: #f0f0f0;
+    color: #f0f0f0;
+    background: #16161d;
+  }
+  form button:hover,
+  form select:hover,
+  form textarea:hover,
+  form input:hover {
+    border-color: #fff;
+    background-color: #333;
+  }
+
+  form select {
+    background-color: #16161d;
   }
 }
