@@ -9,7 +9,7 @@
 
 <section class="cap-list">
   <h2><%= list.title %></h2>
-  <p><b>About this list: </b><%= content_to_html(list.description) %></p>
+  <p><%= content_to_html(list.description) %></p>
   <ul>
     <%- if cap.kind == CapKind::ListAdmin -%>
       <li class="add-to-list">

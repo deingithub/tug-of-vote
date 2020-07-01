@@ -10,12 +10,10 @@
 <% end %>
 
 <section class="poll-results">
-  <h2><%= poll.title %></h2>
-
-  <p>
-    <b>The Proposal: </b>
-    <%= content_to_html(poll.description) %>
-  </p>
+  <article class="poll-text">
+    <h2><%= poll.title %></h2>
+    <p><%= content_to_html(poll.description) %></p>
+  </article>
 
   <div class="votebar <%= votes.empty? ? "novotes" : "" %>">
     <div class="pro" title="Votes cast in favor" style="flex-grow: <%= (pro_votes[0] + pro_votes[1]).size %>;">+</div>
@@ -76,10 +74,12 @@
     <div class="vote">
       <h2>Vote</h2>
       <form action="/cap/<%= cap.cap_slug %>/poll/vote" method="post">
+      <div class="iam">
         <label for="name">Your name</label>
-        <input id="name" placeholder="lain" name="name" required maxlength="42">
+        <input id="name" placeholder="Ganos Lal" name="name" required maxlength="42">
         <label for="password">PIN</label>
         <input id="password" name="password" required maxlength="70">
+        </div>
         <label for="vote">Your vote</label>
         <select id="vote" name="vote">
           <option value="delvote">Delete my vote</option>

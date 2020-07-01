@@ -81,20 +81,25 @@ body header::after {
   background: #333;
 }
 
-body h2 {
-  margin: 2rem 0;
-}
-
 /* polls */
+
+.poll-text {
+  max-width: 100ch;
+  margin: 1rem auto;
+  line-height: 1.4;
+}
 
 div.votebar {
   display: flex;
+  margin: 2rem 0 1rem;
 }
 
 div.votebar div {
   text-align: center;
   font-size: 2rem;
   flex-basis: 0;
+  border-radius: 6rem;
+  min-width: 3ch;
 }
 
 div.votebar div.pro {
@@ -103,6 +108,7 @@ div.votebar div.pro {
 
 div.votebar div.neu {
   background-color: #ffd800;
+  margin: 0 0.5rem;
 }
 
 div.votebar div.con {
@@ -118,6 +124,7 @@ div.votebar.novotes div {
   margin-bottom: 2rem;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr;
+  grid-column-gap: 1rem;
 }
 
 .reasons > div {
@@ -127,7 +134,7 @@ div.votebar.novotes div {
 .reasons > div h2 {
   font-weight: normal;
   font-style: italic;
-  margin-bottom: 0;
+  margin: 2rem auto 0.25rem;
 }
 
 .reasons ul {
@@ -136,17 +143,29 @@ div.votebar.novotes div {
   padding: 0;
 }
 
+.reasons ul li {
+  margin-bottom: 1rem;
+}
+
 .reasons ul li blockquote {
-  margin-left: 0;
+  margin: 0;
+  padding: 0.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid lightgray;
 }
 
 .reasons ul li blockquote p {
   overflow-wrap: anywhere;
   margin-bottom: 0;
+  line-height: 1.4;
+  max-width: 75ch;
+  margin: 0.5rem auto;
 }
 
-.reasons ul li blockquote cite::before {
-  content: "— ";
+.reasons ul li blockquote cite {
+  padding: 0.3rem;
+  background-color: lightgray;
+  border-radius: 0.3rem;
 }
 
 .object-actions h2 {
@@ -182,6 +201,10 @@ li.add-to-list {
 
 /* forms */
 
+form {
+  max-width: 75ch;
+}
+
 form + form {
   margin-top: 1rem;
 }
@@ -205,10 +228,45 @@ form textarea {
   box-sizing: border-box;
   display: block;
   max-width: 100ch;
+  border: 1px solid lightgray;
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+  font-family: "IBM Plex Sans";
+}
+form input:hover,
+form input:focus,
+form textarea:hover,
+form textarea:focus {
+  border-color: darkgray;
 }
 
-form button {
+form button,
+form select {
   margin: 0.3rem 0;
+  width: 100%;
+  border: 1px solid lightgray;
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+}
+form button:hover {
+  background-color: darkgray;
+}
+
+form select {
+  background-color: white;
+}
+
+.iam {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1% 1fr;
+  grid-column-gap: 1rem;
+}
+.iam input {
+  grid-row: 2;
+}
+.iam label {
+  grid-row: 1;
 }
 
 /* ballots */
@@ -223,7 +281,8 @@ form button {
   padding: 0.3rem;
   font-size: 1.3rem;
   list-style-position: inside;
-  border: 1px solid;
+  border: 1px solid lightgray;
+  border-radius: 0.3rem;
   margin-bottom: 0.3rem;
   max-width: 50ch;
 }
@@ -231,6 +290,7 @@ form button {
   width: 4ch;
   font-size: 1.3rem;
   display: inline-block;
+  padding: 0.1rem;
 }
 .vote ul li {
   list-style: none;
@@ -267,18 +327,6 @@ form button {
   font-size: 1.3rem;
   min-width: 2ch;
 }
-.iam form {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1% 1fr;
-  grid-column-gap: 1rem;
-}
-.iam form input {
-  grid-row: 2;
-}
-.iam form label {
-  grid-row: 1;
-}
 .cap-doc ol li summary,
 [data-js-react-rev-pro],
 [data-js-react-rev-neu],
@@ -287,14 +335,32 @@ form button {
 }
 .cap-doc article[contenteditable] {
   border: 1px solid black;
-  font-family: monospace;
-  font-size: 0.9rem;
   padding: 0.3rem;
 }
 .cap-doc article[contenteditable] p {
   margin: 0;
   text-align: left;
   max-width: unset;
+}
+
+.home-page {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 2rem;
+}
+.home-page h1,
+.home-page > p {
+  grid-column: 1 / 4;
+}
+
+.home-page article {
+  max-width: 75ch;
+  padding: 1rem;
+  border: 1px solid lightgray;
+  border-radius: 0.3rem;
+}
+.home-page article h2 {
+  margin: 0;
 }
 
 @media screen and (max-width: 60rem) {
@@ -329,6 +395,12 @@ form button {
   .cap-doc article[contenteditable] {
     margin-bottom: 1rem;
   }
+  .home-page {
+    display: block;
+  }
+  .home-page article {
+    margin-bottom: 2rem;
+  }
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -344,6 +416,9 @@ form button {
   .vote ul li,
   .cap-doc ol li {
     border-color: #f0f0f0;
+  }
+  .poll-results ul li blockquote cite {
+    background-color: #333;
   }
   body a {
     color: #f0f0f0;
