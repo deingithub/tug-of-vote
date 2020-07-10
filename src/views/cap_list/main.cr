@@ -20,6 +20,9 @@ def gen_list(cap)
     elsif cap.ballot_id
       ballot = DATABASE.query_all("select * from ballots where id = ?", cap.ballot_id, as: Ballot)[0]
       next {cap, ballot}
+    elsif cap.doc_id
+      doc = DATABASE.query_all("select * from docs where id = ?", cap.doc_id, as: Doc)[0]
+      next {cap, doc}
     else
       raise "Unreachable"
     end

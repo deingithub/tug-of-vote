@@ -6,16 +6,20 @@ get "/help" do |env|
   tov_render "static_help"
 end
 
-get "/new" do |env|
+macro new_object_with_list_append(template)
   list_param = env.params.query["list"]?
   list_cap = fetch_cap(list_param)
   if list_cap && list_cap.kind == CapKind::ListAdmin
     list = DATABASE.query_all("select * from lists where id = ?", list_cap.list_id, as: List)[0]
-    next tov_render "new_poll"
+    next tov_render {{template}}
   else
     list_cap = nil
   end
-  tov_render "new_poll"
+  tov_render {{template}}
+end
+
+get "/new" do |env|
+  new_object_with_list_append("new_poll")
 end
 
 get "/new_list" do |env|
@@ -23,11 +27,11 @@ get "/new_list" do |env|
 end
 
 get "/new_ballot" do |env|
-  tov_render "new_ballot"
+  new_object_with_list_append("new_ballot")
 end
 
 get "/new_doc" do |env|
-  tov_render "new_doc"
+  new_object_with_list_append("new_doc")
 end
 
 error 404 do

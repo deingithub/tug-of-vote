@@ -4,7 +4,7 @@
 <section>
   <h2>Create new Poll</h2>
   <%- if list_cap -%>
-    <p>The vote link to this poll will be automatically added to the list <a href="/cap/<%= list_cap.cap_slug %>"><%= list.not_nil!.title %></a>.
+    <p>The vote link to this Poll will be automatically added to the list <a href="/cap/<%= list_cap.cap_slug %>"><%= list.not_nil!.title %></a>.
   <%- end -%>
   <form action="/new" method="POST">
     <%- if list_cap -%>

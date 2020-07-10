@@ -3,7 +3,13 @@
 
 <section>
   <h2>Create new Ballot</h2>
+  <%- if list_cap -%>
+    <p>The vote link to this Ballot will be automatically added to the list <a href="/cap/<%= list_cap.cap_slug %>"><%= list.not_nil!.title %></a>.
+  <%- end -%>
   <form action="/new_ballot" method="POST">
+    <%- if list_cap -%>
+      <input type="hidden" name="listcap" value="<%= list_cap.cap_slug %>">
+    <%- end -%>
     <label for="title">Title:</label>
     <input name="title" id="title" required maxlength="200">
     <label for="text-candidates">Candidates (one per line):</label>

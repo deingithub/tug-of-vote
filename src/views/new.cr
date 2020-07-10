@@ -132,6 +132,17 @@ post "/new_doc" do |env|
     c.exec("insert into caps (cap_slug, kind, doc_id) values (?,?,?)", make_cap, CapKind::DocView.value, doc_id)
     LOG.info("doc##{doc_id}: #{edit_cap} created")
   end
+
+  list_param = env.params.body["listcap"]?
+  if list_param
+    list_cap = fetch_cap(list_param)
+    if list_cap && list_cap.kind == CapKind::ListAdmin
+      DATABASE.exec("insert into list_entries (cap_slug, list_id) values (?,?)", edit_cap, list_cap.list_id)
+      LOG.info("list##{list_cap.list_id}: #{list_cap.cap_slug} added entry #{edit_cap}")
+      spawn notify_list_addition(list_cap.list_id, edit_cap)
+    end
+  end
+
   env.redirect "/cap/#{edit_cap}"
 end
 

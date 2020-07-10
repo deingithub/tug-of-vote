@@ -13,7 +13,10 @@
   <ul>
     <%- if cap.kind == CapKind::ListAdmin -%>
       <li class="add-to-list">
-        <a href="/new?list=<%= cap.cap_slug %>">Add a new poll to this list…</a>
+        Add a new item to this list:
+        <a href="/new?list=<%= cap.cap_slug %>">New Poll</a>,
+        <a href="/new_ballot?list=<%= cap.cap_slug %>">New Ballot</a>,
+        <a href="/new_doc?list=<%= cap.cap_slug %>">New Doc</a>
       </li>
     <%- end -%>
     <%- caps.reverse.each do |(entry_cap, entry_val)| -%>
