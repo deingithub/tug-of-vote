@@ -222,3 +222,8 @@ def rev_text(revision)
 
   text
 end
+
+def substring(str : String, chars : Int)
+  return str if str.size <= chars
+  return str[0..chars] + "…"
+end

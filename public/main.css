@@ -162,7 +162,8 @@ div.votebar.novotes div {
   margin: 0.5rem auto;
 }
 
-.reasons ul li blockquote cite {
+address {
+  display: inline-block;
   padding: 0.3rem;
   background-color: lightgray;
   border-radius: 0.3rem;
@@ -326,12 +327,13 @@ form select {
 }
 .cap-doc ol li {
   padding: 0.3rem;
-  border: 1px solid black;
+  border: 1px solid lightgray;
+  border-radius: 0.3rem;
   margin-bottom: 1rem;
 }
 .cap-doc ol.req-in-flight li {
   color: gray;
-  border-color: gray;
+  border-color: #eee;
 }
 .cap-doc ol li .votebar div {
   font-size: 1.3rem;

@@ -64,10 +64,12 @@
         and anyone threateningly waving a gun at them.
       </p>
       <form action="/cap/<%= cap.cap_slug %>/ballot/vote" method="post">
-        <label for="name">Your name</label>
-        <input id="name" placeholder="Moros" name="name" required="" maxlength="42">
-        <label for="password">PIN</label>
-        <input id="password" name="password" required="" maxlength="70">    
+        <div class="iam">
+          <label for="name">Your name</label>
+          <input id="name" placeholder="Moros" name="name" required="" maxlength="42">
+          <label for="password">PIN</label>
+          <input id="password" name="password" required="" maxlength="70">    
+        </div>
         <ul>
           <%- ballot.candidates.sort.each do |candidate| -%>
           <li>

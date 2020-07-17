@@ -33,7 +33,7 @@
         <li>
           <blockquote>
             <p><%= content_to_html(vote.reason) %></p>
-            <cite><%= vote.username %></cite>
+            <address><%= content_to_html(vote.username) %></address>
           </blockquote>
         </li>
       <%- end -%>

@@ -13,9 +13,9 @@
   <%- if cap.kind == CapKind::DocEdit -%><textarea id="editbox" class="hidden"></textarea><%- end -%>
   <ol class="revs">
   <li>
-    <%= pluralize(revisions.reject{ |x| (x.revision_diff || "").empty? }.size, "revision") %> in total.
-    [<a href="#" data-js-expand-all-revs>Expand All</a>]
-    [<a href="#" data-js-collapse-all-revs>Collapse All</a>]
+    <%- num_revisions = revisions.reject{ |x| (x.revision_diff || "").empty? }.size -%>
+    <%= pluralize(num_revisions, "revision") %>, <%= pluralize(revisions.size - num_revisions, "comment") %>.
+    [<a href="#" data-js-toggle-revs>Expand All</a>]
     [<a href="#" data-js-refresh-revs>Refresh List</a>]
     <noscript><br><em>These features require JavaScript to work.</em></noscript>
   </li>
@@ -27,13 +27,11 @@
     -%>
     <li><details>
       <summary>
-        <%= rev.id %>] <%= rev.username %>
+        <address><%= content_to_html(rev.username) %></address>
         <em>
+        <%= substring(content_to_html(rev.comment), 21) %>
         <%- unless (rev.revision_diff || "").empty? -%>
-          Revision
           [<a data-js-focus-rev href="/cap/<%= cap.cap_slug %>/doc/revs/<%= rev.id %>" target="_blank">View</a>]
-        <%- else -%>
-          Comment 
         <%- end -%>
         </em>
       </summary>
@@ -41,7 +39,7 @@
         <%= content_to_html(rev.comment) %>
       </p>
       <p>
-        Created at <%= rev.created_at %>.<br>
+        Created at <%= content_to_html(rev.created_at) %>.<br>
         Reactions, <em>in favor:</em> <%= reacts[0].empty? ? "none" : reacts[0].map{|x| x.username}.join(", ")  %>.
         <em>Neutral,</em> <%= reacts[1].empty? ? "none" : reacts[1].map{|x| x.username}.join(", ") %>.
         <em>Against,</em> <%= reacts[2].empty? ? "none" : reacts[2].map{|x| x.username}.join(", ") %>.

@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     window.tov = {
         is_editing_revision: false,
         displayed_rev: null,
+        rev_list_expanded: false,
     };
 
     // Set up dangerous thing warnings
@@ -144,11 +145,17 @@ function setUpRevListUI() {
         });
     });
 
-    document.querySelector("[data-js-expand-all-revs]").addEventListener("click", function (event) {
+    document.querySelector("[data-js-toggle-revs]").addEventListener("click", function (event) {
         event.preventDefault();
-        for (thing of document.querySelectorAll(".cap-doc ol li details")) {
-            thing.open = true;
+        if (window.tov.rev_list_expanded) {
+            event.target.innerText = "Expand All";
+        } else {
+            event.target.innerText = "Collapse All";
         }
+        for (thing of document.querySelectorAll(".cap-doc ol li details")) {
+            thing.open = !window.tov.rev_list_expanded;
+        }
+        window.tov.rev_list_expanded = !window.tov.rev_list_expanded;
     });
 
     document.querySelector("[data-js-collapse-all-revs]").addEventListener("click", function (event) {
