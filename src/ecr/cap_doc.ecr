@@ -10,7 +10,7 @@
 <h2><%= doc.title %></h2>
 <section class="cap-doc">
   <article class="active-rev" id="rendered">Something will show up here once you select a revision.</article>
-  <textarea id="editbox" class="hidden"></textarea>
+  <%- if cap.kind == CapKind::DocEdit -%><textarea id="editbox" class="hidden"></textarea><%- end -%>
   <ol class="revs">
   <li>
     <%= pluralize(revisions.reject{ |x| (x.revision_diff || "").empty? }.size, "revision") %> in total.

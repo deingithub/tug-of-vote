@@ -221,6 +221,8 @@ function fetchRevision(link) {
 function toggleRevEditing(status) {
     const rendered = document.querySelector("#rendered");
     const editbox = document.querySelector("#editbox");
+    if (!editbox) { return; }
+
     if (status) {
         editbox.classList.remove("hidden");
         editbox.value = rendered.innerText;
