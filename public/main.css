@@ -303,11 +303,21 @@ form select {
   grid-template-columns: 80ch 1fr;
   grid-column-gap: 1rem;
 }
-.cap-doc article p {
-  margin-top: 0;
+.cap-doc #editbox,
+.cap-doc #rendered {
+  display: block;
+  font-family: "IBM Plex Sans";
+  font-size: 1rem;
 }
-.cap-doc article {
-  text-align: justify;
+.cap-doc #editbox {
+  height: 100%;
+  border: 1px solid black;
+  margin: 0;
+  padding: 0.3rem;
+}
+.cap-doc #editbox.hidden,
+.cap-doc #rendered.hidden {
+  display: none;
 }
 .cap-doc ol {
   margin: 0;

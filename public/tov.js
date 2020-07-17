@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-    window.tov = {};
+    window.tov = {
+        is_editing_revision: false,
+        displayed_rev: null,
+    };
+
     // Set up dangerous thing warnings
     document.querySelectorAll("[data-js-confirm]").forEach(function (thing) {
         thing.addEventListener("click", function (event) {
@@ -25,41 +29,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.querySelector("[data-js-enable-doc-editing]").addEventListener("click", function (event) {
             event.preventDefault();
-            const revbox = document.querySelector(".cap-doc article");
-            if (revbox.hasAttribute("contenteditable") && window.confirm("This will irretrievably discard the edits you've made so far. Proceed?")) {
-                revbox.innerHTML = window.tov.old_rev_text;
-                delete window.tov.old_rev_text;
-                revbox.removeAttribute("contenteditable");
-                event.target.innerText = "Edit currently displayed revision";
-            } else {
-                window.tov.old_rev_text = revbox.innerHTML;
-                revbox.setAttribute("contenteditable", "");
-                event.target.innerText = "Revert edits";
+            if (window.tov.is_editing_revision) {
+                if (!window.confirm("This will irretrivably discard your edits. Proceed?")) { return; }
             }
+            toggleRevEditing(!window.tov.is_editing_revision)
         });
 
         document.querySelector("[data-js-doc-submit]").addEventListener("click", function (event) {
             event.preventDefault();
-            if (window.tov.old_rev_text) {
-                var newRev = document.querySelector(".cap-doc article[contenteditable]").innerText;
 
-                // This is incomprehensibly cursed.
-                // I do not understand why this is necessary.
-                // I have given up trying to understand why this is necessary. 
-                // I would not wish dealing with this utterly disgusting mess
-                // upon Brendan Eich himself.
-                newRev = newRev.replace(/(?:\r?\n){2}/g, "\n");
-                newRev = newRev.replace(/(?:\r?\n){3}/g, "\n\n");
-
+            // if we have an edit, add it to the form
+            if (window.tov.is_editing_revision) {
+                var newRev = document.querySelector(".cap-doc #editbox").value;
                 document.querySelector('.revision input[name="new-rev"]').value = newRev;
                 document.querySelector('.revision input[name="parent-rev"]').value = window.tov.displayed_rev || "";
             }
+
+            // add auth data to form
             document.querySelector('.revision input[name="name"]').value = document.querySelector(".iam input#name").value;
             document.querySelector('.revision input[name="password"]').value = document.querySelector(".iam input#password").value;
+
             const fd = new FormData(document.querySelector(".revision form"));
 
+            // abort if already processing some request
             if (document.querySelector(".cap-doc ol.req-in-flight")) { return; }
             document.querySelector(".cap-doc ol").classList.toggle("req-in-flight");
+
             fetch(window.location.pathname + "/doc/edit", { method: "POST", body: fd }).then(
                 resp => {
                     update_rev_list(resp);
@@ -67,11 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.querySelector('.revision input[name="new-rev"]').value = "";
                     document.querySelector('.revision input[name="parent-rev"]').value = "";
                     // reset editing area
-                    delete window.tov.old_rev_text;
-                    document.querySelector(".cap-doc article").innerHTML = "Something will show up here once you select a revision.";
-                    document.querySelector(".cap-doc article").removeAttribute("contenteditable");
-                    document.querySelector("[data-js-enable-doc-editing]").innerText = "Edit currently displayed revision";
-                    document.querySelector(".revision textarea#comment").innerText = "";
+                    toggleRevEditing(false);
+                    document.querySelector(".revision textarea#comment").value = "";
                 }
             );
         });
@@ -139,14 +131,16 @@ function setUpRevListUI() {
     document.querySelectorAll("[data-js-focus-rev]").forEach(function (thing) {
         thing.addEventListener("click", function (event) {
             event.preventDefault();
-            if (!window.tov.old_rev_text ||
-                confirm("Displaying this revision will irretrievably discard the edits you've made so far. Proceed?")) {
-                const link = event.target.getAttribute("href");
-                fetchRevision(link);
-                window.tov.displayed_rev = link.split("/")[link.split("/").length - 1];
-                delete window.tov.old_rev_text;
-                document.querySelector("[data-js-enable-doc-editing]").innerText = "Edit currently displayed revision";
+            if (window.tov.is_editing_revision) {
+                if (!window.confirm("Displaying this revision will irretrievably discard the edits you've made so far. Proceed?")) {
+                    return;
+                }
             }
+            toggleRevEditing(false);
+
+            const link = event.target.getAttribute("href");
+            fetchRevision(link);
+            window.tov.displayed_rev = link.split("/")[link.split("/").length - 1];
         });
     });
 
@@ -222,4 +216,21 @@ function fetchRevision(link) {
                 }
             })
         });
+}
+
+function toggleRevEditing(status) {
+    const rendered = document.querySelector("#rendered");
+    const editbox = document.querySelector("#editbox");
+    if (status) {
+        editbox.classList.remove("hidden");
+        editbox.value = rendered.innerText;
+        rendered.classList.add("hidden");
+        document.querySelector("[data-js-enable-doc-editing]").innerText = "Revert Edits";
+    } else {
+        editbox.classList.add("hidden");
+        editbox.value = "";
+        rendered.classList.remove("hidden");
+        document.querySelector("[data-js-enable-doc-editing]").innerText = "Edit currently displayed revision";
+    }
+    window.tov.is_editing_revision = status;
 }

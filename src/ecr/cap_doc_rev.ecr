@@ -7,7 +7,7 @@
     You are viewing revision #<%= rev.id %> of this document, which was submitted by <%= rev.username %> at <%= rev.created_at %>.
     [<a href="/cap/<%= cap.cap_slug %>">Return to the full view</a>]
   </em></p>
-  <article class="active-rev content-page">
-    <p><%= content_to_html(rev_text(rev)) %></p>
+  <article class="active-rev content-page" id="rendered">
+    <%= content_to_html(rev_text(rev)) %>
   </article>
 </section>
