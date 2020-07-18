@@ -185,6 +185,7 @@ class Ballot
     candidates:    {type: Array(String), converter: DBList},
     duration:      Int64?,
     cached_result: {type: Hash(String, String), converter: DBAssociative},
+    hide_names:    Bool,
   })
 end
 

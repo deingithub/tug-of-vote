@@ -16,6 +16,14 @@
     with <%= pluralize(votes.size, "vote") %>:
   </p>
 
+  <%- unless ballot.hide_names -%>
+  <div class="names">
+    <%- votes.each do |vote| -%>
+    <address><%= vote.username %></address>
+    <%- end -%>
+  </div>
+  <%- end -%>
+
   <ol>
     <%- ballot.cached_result
         .to_a
@@ -60,8 +68,12 @@
         and <em><%= ballot.candidates.size %></em> as your least-favorite one. Ties between candidates are allowed.
         You can choose to leave candidates unordered, they'll count as if they were all set to <em><%= ballot.candidates.size + 1%></em>.
         To delete your vote entirely, fill in blanks everywhere.<br>
+        <%- if ballot.hide_names -%>
         Your order of preference (and your username) will not be displayed publicly, but is visible to the site admin
         and anyone threateningly waving a gun at them.
+        <%- else -%>
+        Your username will be publicly visible, which may make it possible to deduce your order of preference.
+        <%- end -%>
       </p>
       <form action="/cap/<%= cap.cap_slug %>/ballot/vote" method="post">
         <div class="iam">

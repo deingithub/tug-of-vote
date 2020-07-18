@@ -29,7 +29,7 @@
       <summary>
         <address><%= content_to_html(rev.username) %></address>
         <em>
-        <%= substring(content_to_html(rev.comment), 21) %>
+        <%= substring(content_to_html(rev.comment), 42) %>
         <%- unless (rev.revision_diff || "").empty? -%>
           [<a data-js-focus-rev href="/cap/<%= cap.cap_slug %>/doc/revs/<%= rev.id %>" target="_blank">View</a>]
         <%- end -%>

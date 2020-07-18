@@ -56,7 +56,8 @@ create table if not exists ballots (
   title string not null,
   candidates string not null,
   duration integer default null,
-  cached_result string not null
+  cached_result string not null,
+  hide_names bool not null
 );
 
 create table if not exists ballot_votes (

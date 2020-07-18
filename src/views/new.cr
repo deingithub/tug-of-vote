@@ -76,6 +76,8 @@ post "/new_ballot" do |env|
 
   candidates = candidates_str.split("\n").map(&.strip).reject(&.empty?).uniq
 
+  hide_names = env.params.body["hide-names"]? ? true : false
+
   error_text = ""
   error_text += validate_title(title)
   error_text += validate_candidate_list(candidates)
@@ -89,13 +91,14 @@ post "/new_ballot" do |env|
   DATABASE.transaction do |tx|
     c = tx.connection
     ballot_id = c.exec(
-      "insert into ballots (title, candidates, duration, cached_result) values (?, ?, ?, ?)",
+      "insert into ballots (title, candidates, duration, cached_result, hide_names) values (?, ?, ?, ?, ?)",
       title,
       DBList.serialize(candidates),
       duration,
       DBAssociative.serialize(
         candidates.map { |x| {x, 1} }.to_h
-      )
+      ),
+      hide_names
     ).last_insert_id
     c.exec("insert into caps (cap_slug, kind, ballot_id) values (?,?,?)", admin_cap, CapKind::BallotAdmin.value, ballot_id)
     c.exec("insert into caps (cap_slug, kind, ballot_id) values (?,?,?)", vote_cap, CapKind::BallotVote.value, ballot_id)
