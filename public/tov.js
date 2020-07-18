@@ -158,13 +158,6 @@ function setUpRevListUI() {
         window.tov.rev_list_expanded = !window.tov.rev_list_expanded;
     });
 
-    document.querySelector("[data-js-collapse-all-revs]").addEventListener("click", function (event) {
-        event.preventDefault();
-        for (thing of document.querySelectorAll(".cap-doc ol li details")) {
-            thing.open = false;
-        }
-    });
-
     document.querySelector("[data-js-refresh-revs]").addEventListener("click", function (event) {
         event.preventDefault();
         if (document.querySelector(".cap-doc ol.req-in-flight")) { return; }
