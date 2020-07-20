@@ -285,6 +285,7 @@ form select {
 .ballot-results ol,
 .vote ul {
   padding: 0;
+  counter-reset: imsosorry;
 }
 
 .ballot-results ol li,
@@ -296,6 +297,18 @@ form select {
   border-radius: 0.3rem;
   margin-bottom: 0.3rem;
   max-width: 50ch;
+}
+.ballot-results ol li {
+  display: grid;
+  grid-template-columns: 3ch 1fr;
+}
+.ballot-results ol li * {
+  grid-column: 2;
+}
+.ballot-results ol li::before {
+  counter-increment: imsosorry;
+  content: counter(imsosorry) ".";
+  grid-column: 1;
 }
 .ballot-results .names {
   display: flex;

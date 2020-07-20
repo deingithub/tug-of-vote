@@ -32,7 +32,7 @@
         .sort_by(&.[0]).reverse
         .each do |_, candidates|
     -%>
-      <li><%= candidates.map(&.[0]).sort.join(" <em>and</em> ") %></li>
+      <li><span><%= candidates.map(&.[0]).sort.join(" <em>and</em><br>") %></span></li>
     <%- end -%>
   </ol>
 
