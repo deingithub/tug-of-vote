@@ -5,6 +5,11 @@ document.addEventListener("DOMContentLoaded", function () {
         rev_list_expanded: false,
     };
 
+    if (window.localStorage["theme"]) {
+        changeTheme(Number(window.localStorage["theme"]));
+        document.querySelector("[data-js-select-theme]").selectedIndex = Number(window.localStorage["theme"]);
+    }
+
     // Set up dangerous thing warnings
     document.querySelectorAll("[data-js-confirm]").forEach(function (thing) {
         thing.addEventListener("click", function (event) {
@@ -23,6 +28,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (document.querySelector("section[class$=results]")) {
         window.setTimeout(fetchPollBallotUpdates, 5000);
     }
+
+    document.querySelector("[data-js-select-theme]").addEventListener("change", function (event) {
+        changeTheme(Number(event.target.value));
+    });
+
 
     // Set up Docs UI
     if (document.querySelector(".cap-doc")) {
@@ -235,4 +245,21 @@ function toggleRevEditing(status) {
         document.querySelector("[data-js-enable-doc-editing]").innerText = "Edit currently displayed revision";
     }
     window.tov.is_editing_revision = status;
+}
+
+function changeTheme(selected) {
+    const num_themes = 2;
+    window.localStorage["theme"] = selected;
+    const theme_start_index = document.styleSheets[0].cssRules.length - num_themes - 1;
+    var index = 0;
+    for (rule of document.styleSheets[0].cssRules) {
+        if (index < theme_start_index) { index++; continue; }
+
+        if (selected > 0 && index == theme_start_index + selected) {
+            rule.conditionText = "screen";
+        } else {
+            rule.conditionText = "not all";
+        }
+        index++;
+    }
 }

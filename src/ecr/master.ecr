@@ -24,7 +24,14 @@
 
   <footer>
     <p>This page is best viewed using curl(1) on a screen resolution of 80×24 characters or better. Uses IBM Plex Sans (<a href="/ofl.txt">License</a>). Brought to you by <a href="https://15318.de" rel="noreferrer">Dingenskirchen Systems</a>. View the <a href="https://github.com/deingithub/tug-of-vote" rel="noreferrer">source code</a> or the <a href="/help">manual</a>.</p>
-    <p>Alternate Colorschemes: <a href="/taraslate.user.css">Tara's Slate</a>. Tug of Vote respects your dark theme preference if set.</p>
+    <p>
+      <label for="theme-selector">Available Colorschemes:</label>
+      <select id="theme-selector" data-js-select-theme>
+        <option value="0">Light</option>
+        <option value="1">Dark</option>
+        <option value="2">Slate</option>
+      </select>
+    </p>
   </footer>
 </body>
 </html>

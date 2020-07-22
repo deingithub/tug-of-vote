@@ -447,7 +447,7 @@ form select {
   }
 }
 
-@media screen and (prefers-color-scheme: dark) {
+@media not all {
   body {
     background-color: #16161d;
     color: #f0f0f0;
@@ -491,5 +491,31 @@ form select {
 
   form select {
     background-color: #16161d;
+  }
+}
+
+@media not all {
+  body,
+  body a {
+    color: #fff;
+    background-color: #4a525a;
+  }
+  .danger {
+    color: #b33;
+  }
+  body header::after {
+    background: #fff;
+  }
+  .poll-actions h2 {
+    border-color: #fff;
+  }
+  .votebar div {
+    color: #4a525a;
+  }
+  address {
+    display: inline-block;
+    padding: 0.3rem;
+    background-color: #6e787c;
+    border-radius: 0.3rem;
   }
 }
