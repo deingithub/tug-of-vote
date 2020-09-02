@@ -6,7 +6,7 @@ with import (builtins.fetchTarball {
 crystal.buildCrystalPackage rec {
   version = "0.1.0";
   pname = "TugOfVote";
-  src = ./.;
+  src = builtins.filterSource (path: type: baseNameOf path != "tugofvote.db") ./.;
 
   shardsFile = ./shards.nix;
   crystalBinaries.TugOfVote.src = "src/TugOfVote.cr";
