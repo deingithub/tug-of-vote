@@ -25,14 +25,8 @@
   <%- end -%>
 
   <ol>
-    <%- ballot.cached_result
-        .to_a
-        .group_by(&.[1].to_i)
-        .to_a
-        .sort_by(&.[0]).reverse
-        .each do |_, candidates|
-    -%>
-      <li><span><%= candidates.map(&.[0]).sort.join(" <em>and</em><br>") %></span></li>
+    <%- cached_result.each do |candidates| -%>
+      <li><span><%= candidates.sort.join(" <em>and</em><br>") %></span></li>
     <%- end -%>
   </ol>
 
@@ -47,7 +41,7 @@
     Voting has ended. You can only view the results now.
     <%- end -%>
     <br>
-    <%= 
+    <%=
       lower_caps
       .sort_by{|cap| cap.kind }
       .reverse
@@ -72,7 +66,9 @@
         Your order of preference (and your username) will not be displayed publicly, but is visible to the site admin
         and anyone threateningly waving a gun at them.
         <%- else -%>
+        <em class="danger">
         Your username will be publicly visible, which may make it possible to deduce your order of preference.
+        </em>
         <%- end -%>
       </p>
       <form action="/cap/<%= cap.cap_slug %>/ballot/vote" method="post">
@@ -80,12 +76,12 @@
           <label for="name">Your name</label>
           <input id="name" placeholder="Moros" name="name" required="" maxlength="42">
           <label for="password">PIN</label>
-          <input id="password" name="password" required="" maxlength="70">    
+          <input id="password" name="password" required="" maxlength="70">
         </div>
         <ul>
-          <%- ballot.candidates.sort.each do |candidate| -%>
+          <%- ballot.candidates.sort.each_with_index do |candidate, index| -%>
           <li>
-            <input type="number" min="1" max="<%= ballot.candidates.size %>" name="<%= candidate %>"> <%= candidate %>
+            <input type="number" min="1" max="<%= ballot.candidates.size %>" name="<%= index %>"> <%= candidate %>
           </li>
           <%- end -%>
         </ul>

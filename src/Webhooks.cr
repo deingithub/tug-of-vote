@@ -3,12 +3,14 @@ require "json"
 
 def notify_list_addition(list_id, vote_cap)
   list = DATABASE.query_one("select * from lists where id = ?", list_id, as: List)
+
   unless list.webhook_url.empty?
     json = JSON.build do |builder|
       builder.object do
-        builder.field "text", "@everyone **New Poll:** #{ENV["BASE_URL"]}/cap/#{vote_cap}"
+        builder.field "text", "@everyone **New Poll:** #{ENV["INSTANCE_BASE_URL"]}/cap/#{vote_cap}"
       end
     end
+
     begin
       HTTP::Client.post(
         list.webhook_url,
@@ -16,7 +18,7 @@ def notify_list_addition(list_id, vote_cap)
         json.to_s
       )
     rescue e
-      LOG.error "Sending Webhook for list##{list_id} failed: #{e}"
+      Log.error exception: e, &.emit("webhook send failed", id: list_id)
     end
   end
 end

@@ -1,3 +1,42 @@
+# Monkeypatches for things we want to be able to deserialize
+
+# enums are stored as integers
+struct Enum
+  include DB::Mappable
+
+  def self.new(rs : DB::ResultSet)
+    self.from_value(rs.read(Int64))
+  end
+end
+
+# arrays are stored as JSON
+class Array
+  include DB::Mappable
+
+  def self.new(rs : DB::ResultSet)
+    self.from_json(rs.read.to_s)
+  end
+end
+
+# hashes are stored as JSON
+class Hash
+  include DB::Mappable
+
+  def self.new(rs : DB::ResultSet)
+    self.from_json(rs.read.to_s)
+  end
+end
+
+class HoursToTimeSpan
+  def self.from_rs(rs : DB::ResultSet)
+    if read_value = rs.read(Int64 | Nil)
+      Time::Span.new(hours: read_value)
+    else
+      nil
+    end
+  end
+end
+
 enum CapKind
   # Edit Document
   DocEdit = 21
@@ -30,54 +69,50 @@ enum CapKind
 
   def to_s
     case self
-    when PollAdmin, BallotAdmin
+    in PollAdmin, BallotAdmin
       "Administrate"
-    when PollVote, BallotVote
+    in PollVote, BallotVote
       "Vote"
-    when PollVoteDisabled, BallotVoteDisabled
+    in PollVoteDisabled, BallotVoteDisabled
       "Vote (closed)"
-    when PollView, BallotView, DocView
+    in PollView, BallotView, DocView
       "View"
-    when PollViewAnon
+    in PollViewAnon
       "View (anonymized)"
-    when ListAdmin
+    in ListAdmin
       "Administrate List"
-    when ListView
+    in ListView
       "View List"
-    when DocEdit
+    in DocEdit
       "Edit"
-    when Revoked
+    in Revoked
       "(Revoked)"
     end
   end
 
   def to_verb
     case self
-    when BallotAdmin
+    in BallotAdmin
       "Administrate Ballot"
-    when BallotView, BallotVoteDisabled
+    in BallotView, BallotVoteDisabled
       "View Ballot"
-    when PollAdmin
+    in PollAdmin
       "Administrate Poll"
-    when PollVote, BallotVote
+    in PollVote, BallotVote
       "Vote on"
-    when PollVoteDisabled, PollView, PollViewAnon
+    in PollVoteDisabled, PollView, PollViewAnon
       "View Poll"
-    when ListAdmin
+    in ListAdmin
       "Administrate List"
-    when ListView
+    in ListView
       "View List"
-    when DocEdit
+    in DocEdit
       "Edit Doc"
-    when DocView
+    in DocView
       "View Doc"
-    when Revoked
+    in Revoked
       "(Revoked)"
     end
-  end
-
-  def self.from_rs(rs)
-    self.from_value(rs.read(Int64))
   end
 end
 
@@ -86,48 +121,16 @@ enum VoteKind
   Neutral =  0
   InFavor =  1
 
-  def self.from_rs(rs)
-    self.from_value(rs.read(Int64))
-  end
-end
-
-# Helper class to safely read strings from the database.
-# Currently, for some reason reading a normal String that consists entirely
-# out of digits raises an exception.
-
-class DBString
-  def self.from_rs(rs)
-    rs.read.to_s
-  end
-end
-
-class DBList
-  def self.from_rs(rs)
-    rs.read.to_s.split(",").map { |x| Base64.decode_string(x) }
-  end
-
-  def self.serialize(arr)
-    arr.map { |x| Base64.strict_encode(x) }.join(",")
-  end
-end
-
-class DBAssociative
-  def self.from_rs(rs)
-    rs.read.to_s.split(",").map { |x|
-      kv = x.split(":")
-      {Base64.decode_string(kv[0]), Base64.decode_string(kv[1])}
-    }.to_h
-  end
-
-  def self.serialize(hash)
-    hash.to_a.map { |k, v| Base64.strict_encode(k.to_s) + ":" + Base64.strict_encode(v.to_s) }.join(",")
+  def to_s
+    "In Favor" if self == InFavor
+    previous_def
   end
 end
 
 class Cap
   DB.mapping({
     cap_slug:  String,
-    kind:      {type: CapKind, converter: CapKind},
+    kind:      CapKind,
     poll_id:   Int64?,
     list_id:   Int64?,
     ballot_id: Int64?,
@@ -142,20 +145,20 @@ end
 class Poll
   DB.mapping({
     id:          Int64,
-    created_at:  String,
-    title:       {type: String, converter: DBString},
-    description: {type: String, converter: DBString},
-    duration:    Int64?,
+    created_at:  Time,
+    title:       String,
+    description: String,
+    duration:    {type: Time::Span, nilable: true, converter: HoursToTimeSpan},
   })
 end
 
 class Vote
   DB.mapping({
-    kind:       {type: VoteKind, converter: VoteKind},
-    username:   {type: String, converter: DBString},
-    password:   {type: String, converter: DBString},
-    reason:     {type: String, converter: DBString},
-    created_at: String,
+    kind:       VoteKind,
+    username:   String,
+    password:   String,
+    reason:     String,
+    created_at: Time,
     poll_id:    Int64,
   })
 end
@@ -163,10 +166,10 @@ end
 class List
   DB.mapping({
     id:          Int64,
-    created_at:  String,
-    description: {type: String, converter: DBString},
-    title:       {type: String, converter: DBString},
-    webhook_url: {type: String, converter: DBString},
+    created_at:  Time,
+    description: String,
+    title:       String,
+    webhook_url: String,
   })
 end
 
@@ -180,11 +183,11 @@ end
 class Ballot
   DB.mapping({
     id:            Int64,
-    created_at:    String,
-    title:         {type: String, converter: DBString},
-    candidates:    {type: Array(String), converter: DBList},
-    duration:      Int64?,
-    cached_result: {type: Hash(String, String), converter: DBAssociative},
+    created_at:    Time,
+    title:         String,
+    candidates:    Array(String),
+    duration:      {type: Time::Span, nilable: true, converter: HoursToTimeSpan},
+    cached_result: Hash(Int64, Int64),
     hide_names:    Bool,
   })
 end
@@ -192,26 +195,26 @@ end
 class BallotVote
   DB.mapping({
     ballot_id:   Int64,
-    username:    {type: String, converter: DBString},
-    password:    {type: String, converter: DBString},
-    created_at:  String,
-    preferences: {type: Hash(String, String), converter: DBAssociative},
+    username:    String,
+    password:    String,
+    created_at:  Time,
+    preferences: Hash(Int64, Int64),
   })
 end
 
 class Doc
   DB.mapping({
     id:         Int64,
-    created_at: String,
-    title:      {type: String, converter: DBString},
+    created_at: Time,
+    title:      String,
   })
 end
 
 class DocUser
   DB.mapping({
     doc_id:   Int64,
-    username: {type: String, converter: DBString},
-    password: {type: String, converter: DBString},
+    username: String,
+    password: String,
   })
 end
 
@@ -219,11 +222,11 @@ class DocRevision
   DB.mapping({
     id:                 Int64,
     doc_id:             Int64,
-    created_at:         String,
-    comment:            {type: String, converter: DBString},
-    revision_diff:      {type: String, converter: DBString, nilable: true},
+    created_at:         Time,
+    comment:            String,
+    revision_diff:      String?,
     parent_revision_id: Int64?,
-    username:           {type: String, converter: DBString},
+    username:           String,
   })
 end
 
@@ -231,7 +234,7 @@ class DocRevisionReaction
   DB.mapping({
     doc_id:      Int64,
     revision_id: Int64,
-    username:    {type: String, converter: DBString},
-    kind:        {type: VoteKind, converter: VoteKind},
+    username:    String,
+    kind:        VoteKind,
   })
 end

@@ -1,8 +1,5 @@
-# Shards dependency resolution is hopelessly broken and OOMs.
-# Refer to shards.nix for up to date dependencies.
-
 name: TugOfVote
-version: 0.1.0
+version: 1.0.0
 
 authors:
   - deing <admin@15318.de>
@@ -20,3 +17,4 @@ dependencies:
     github: kemalcr/kemal
   sqlite3:
     github: crystal-lang/crystal-sqlite3
+    commit: 985bfa2d7cb192671272e19c027cf9fb8a438b66 # reading timestamps is broken in the last release, gj crystal

@@ -1,54 +1,49 @@
-require "crypto/bcrypt/password"
-
 post "/cap/:cap_slug/poll/vote" do |env|
-  name = HTML.escape(env.params.body["name"].as(String))
-  password = HTML.escape(env.params.body["password"].as(String))
-  vote = HTML.escape(env.params.body["vote"].as(String))
-  reason = HTML.escape(env.params.body["reason"].as(String))
-
-  error_text = ""
-  error_text += validate_username(name)
-  error_text += validate_reason(reason)
-  error_text += validate_password(password)
-  unless error_text.empty?
-    halt env, status_code: 400, response: tov_render "cap_invalid"
-  end
-
   cap_data = fetch_cap(env.params.url["cap_slug"])
-  if cap_data.nil? || (cap_data.kind != CapKind::PollVote && cap_data.kind != CapKind::PollAdmin)
-    error_text = "Unauthorized. "
-    halt env, status_code: 403, response: tov_render "cap_invalid"
-  end
+  fail(403, "Unauthorized.") if cap_data.nil? || (cap_data.kind != CapKind::PollVote && cap_data.kind != CapKind::PollAdmin)
 
-  votes = DATABASE.query_all("select * from votes where poll_id = ? and username = ?", cap_data.poll_id, name, as: Vote)
-  unless votes.empty?
-    authorized = Crypto::Bcrypt::Password.new(votes[0].password).verify(password)
-    unless authorized
-      error_text = "Invalid Password. "
-      halt env, status_code: 403, response: tov_render "cap_invalid"
-    end
-  end
+  name, password, vote, reason = HTML.escape(env.params.body["name"].as(String)), HTML.escape(env.params.body["password"].as(String)), env.params.body["vote"].as(String), HTML.escape(env.params.body["reason"].as(String))
+  validate_checks(
+    validate_username(name),
+    validate_reason(reason),
+    validate_password(password)
+  )
 
-  # at this point we are both authorized to vote and have either a valid password or a new user
+  old_vote = DATABASE.query_all("select * from votes where poll_id = ? and username = ?", cap_data.poll_id, name, as: Vote)[0]?
+
   if vote == "delvote"
-    if votes.empty?
-      error_text = "You can't delete your vote if it hasn't been set before. "
-      halt env, status_code: 400, response: tov_render "cap_invalid"
-    end
-    DATABASE.exec "delete from votes where poll_id = ? and username = ?", cap_data.poll_id, name
+    if old_vote
+      fail(403, "Invalid Password.") unless valid_password(:poll, cap_data.poll_id, name, password)
 
-    LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} deleted vote #{name}")
-  else
-    vote_enum = VoteKind.parse(vote)
-    unless votes.empty?
-      DATABASE.exec "update votes set kind = ?, reason = ?, created_at = current_timestamp where poll_id = ? and username = ?", vote_enum.value, reason, cap_data.poll_id, name
-
-      LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} modified #{name}")
+      DATABASE.exec "delete from votes where poll_id = ? and username = ?", cap_data.poll_id, name
+      Log.info &.emit("deleted poll vote", id: cap_data.poll_id, cap: cap_data.cap_slug, name: name)
     else
-      hashed_password = Crypto::Bcrypt::Password.create(password).to_s
-      DATABASE.exec "insert into votes (kind, username, password, reason, poll_id) values (?,?,?,?,?)", vote_enum.value, name, hashed_password, reason, cap_data.poll_id
+      fail(400, "You can't delete your vote if it hasn't been set before.")
+    end
+  else
+    vote = VoteKind.parse(vote)
 
-      LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} created vote #{name}")
+    if old_vote
+      fail(403, "Invalid Password.") unless valid_password(:poll, cap_data.poll_id, name, password)
+
+      DATABASE.exec(
+        "update votes set kind = ?, reason = ?, created_at = current_timestamp where poll_id = ? and username = ?",
+        vote.value,
+        reason,
+        cap_data.poll_id,
+        name
+      )
+      Log.info &.emit("updated poll vote", id: cap_data.poll_id, cap: cap_data.cap_slug, name: name)
+    else
+      DATABASE.exec(
+        "insert into votes (kind, username, password, reason, poll_id) values (?,?,?,?,?)",
+        vote.value,
+        name,
+        Crypto::Bcrypt::Password.create(password).to_s,
+        reason,
+        cap_data.poll_id
+      )
+      Log.info &.emit("created poll vote", id: cap_data.poll_id, cap: cap_data.cap_slug, name: name)
     end
   end
 
@@ -57,35 +52,26 @@ end
 
 get "/cap/:cap_slug/poll/end_voting" do |env|
   cap_data = fetch_cap(env.params.url["cap_slug"])
-  if cap_data.nil? || cap_data.kind != CapKind::PollAdmin
-    error_text = "Unauthorized. "
-    halt env, status_code: 403, response: tov_render "cap_invalid"
-  end
+  fail(403, "Unauthorized.") if cap_data.nil? || cap_data.kind != CapKind::PollAdmin
 
-  DATABASE.exec "update caps set kind = 3 where kind = 4 and poll_id = ?", cap_data.poll_id
-  LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} closed voting")
+  DATABASE.exec("update caps set kind = 3 where kind = 4 and poll_id = ?", cap_data.poll_id)
+  Log.info &.emit("closed poll", id: cap_data.poll_id, cap: cap_data.cap_slug)
 
   env.redirect "/cap/#{env.params.url["cap_slug"]}"
 end
 
 post "/cap/:cap_slug/poll/update" do |env|
   cap_data = fetch_cap(env.params.url["cap_slug"])
-  if cap_data.nil? || cap_data.kind != CapKind::PollAdmin
-    error_text = "Unauthorized. "
-    halt env, status_code: 403, response: tov_render "cap_invalid"
-  end
+  fail(403, "Unauthorized") if cap_data.nil? || cap_data.kind != CapKind::PollAdmin
 
-  title = HTML.escape(env.params.body["title"].as(String))
-  description = HTML.escape(env.params.body["description"].as(String))
-  error_text = ""
-  error_text += validate_title(title)
-  error_text += validate_content(description)
-  unless error_text.empty?
-    halt env, status_code: 400, response: tov_render "cap_invalid"
-  end
+  title, description = HTML.escape(env.params.body["title"].as(String)), HTML.escape(env.params.body["description"].as(String))
+  validate_checks(
+    validate_title(title),
+    validate_content(description)
+  )
 
-  DATABASE.exec "update polls set title = ?, description = ? where id = ?", title, description, cap_data.poll_id
-  LOG.info("poll##{cap_data.poll_id}: #{cap_data.cap_slug} updated poll")
+  DATABASE.exec("update polls set title = ?, description = ? where id = ?", title, description, cap_data.poll_id)
+  Log.info &.emit("updated poll", id: cap_data.poll_id, cap: cap_data.cap_slug)
 
   env.redirect "/cap/#{env.params.url["cap_slug"]}"
 end

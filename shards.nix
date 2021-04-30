@@ -32,7 +32,7 @@
   sqlite3 = {
     owner = "crystal-lang";
     repo = "crystal-sqlite3";
-    rev = "v0.18.0";
-    sha256 = "03nnvpchhq9f9ywsm3pk2rrj4a3figw7xs96zdziwgr5znkz6x93";
+    rev = "985bfa2d7cb192671272e19c027cf9fb8a438b66";
+    sha256 = "0nswik0jfm9ss1x1rypq29251xgrna6bx2wj9bh761x2rkjihhz4";
   };
 }

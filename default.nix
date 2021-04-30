@@ -12,5 +12,5 @@ crystal.buildCrystalPackage rec {
   crystalBinaries.TugOfVote.src = "src/TugOfVote.cr";
   crystalBinaries.TugOfVote.options = [];
 
-  buildInputs = [ sqlite-interactive.dev ];
+  buildInputs = [ sqlite-interactive.dev openssl.dev ];
 }

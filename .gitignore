@@ -7,3 +7,4 @@ tugofvote.db
 *.log
 tov.config
 result
+.env

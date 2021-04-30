@@ -11,24 +11,18 @@ get "/cap/:cap_slug" do |env|
   cap = fetch_cap(env.params.url["cap_slug"])
   if cap
     case cap.kind
-    when CapKind::Revoked
-      error_text = "This URL is unknown, invalid or has been revoked. Sorry."
-      halt env, status_code: 404, response: tov_render "cap_invalid"
-      tov_render "cap_invalid"
-    when CapKind::ListView, CapKind::ListAdmin
+    in CapKind::Revoked
+      fail(404, "This URL is unknown, invalid or has been revoked. Sorry.")
+    in CapKind::ListView, CapKind::ListAdmin
       next gen_list(cap)
-    when CapKind::PollAdmin, CapKind::PollVote, CapKind::PollVoteDisabled, CapKind::PollView, CapKind::PollViewAnon
+    in CapKind::PollAdmin, CapKind::PollVote, CapKind::PollVoteDisabled, CapKind::PollView, CapKind::PollViewAnon
       next gen_poll(cap)
-    when CapKind::BallotAdmin, CapKind::BallotVote, CapKind::BallotVoteDisabled, CapKind::BallotView
+    in CapKind::BallotAdmin, CapKind::BallotVote, CapKind::BallotVoteDisabled, CapKind::BallotView
       next gen_ballot(cap)
-    when CapKind::DocEdit, CapKind::DocView
+    in CapKind::DocEdit, CapKind::DocView
       next gen_doc(cap)
-    else
-      raise "Unimplemented CapKind"
     end
   else
-    error_text = "This URL is unknown, invalid or has been revoked. Sorry."
-    halt env, status_code: 404, response: tov_render "cap_invalid"
-    tov_render "cap_invalid"
+    fail(404, "This URL is unknown, invalid or has been revoked. Sorry.")
   end
 end

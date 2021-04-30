@@ -1,5 +1,20 @@
-# Yes this is not an antipattern.
-# Trust me.
+require "crypto/bcrypt/password"
+
+macro fail(status, text)
+  error_text = {{text}}
+  halt env, status_code: {{status}}, response: tov_render "cap_invalid"
+end
+
+# these validation shenanigans are not, in fact, an antipattern.
+# trust me.
+macro validate_checks(*checks)
+  %local_error_text = ""
+  {% for check in checks %}
+    %local_error_text += {{check}}
+  {% end %}
+
+  fail(400, %local_error_text) unless %local_error_text.empty?
+end
 
 def validate_username(str)
   return "Username may not be empty. " if str.empty?
@@ -55,33 +70,15 @@ def fetch_cap(cap_slug)
 end
 
 def content_to_html(str)
-  str.gsub("\n", "<br>")
-end
-
-# ~~Based on~~ Stolen from Kemal's default logger, writes to global LOG instead
-class ToVLogger < Kemal::BaseLogHandler
-  def call(context : HTTP::Server::Context)
-    time = Time.utc
-    call_next(context)
-    elapsed_text = elapsed_text(Time.utc - time)
-    LOG.debug "#{context.response.status_code} #{context.request.method} #{context.request.resource} #{elapsed_text}"
-    context
-  end
-
-  def write(message : String)
-    LOG.info(message.rchop("\n"))
-  end
-
-  private def elapsed_text(elapsed)
-    millis = elapsed.total_milliseconds
-    return "#{millis.round(2)}ms" if millis >= 1
-
-    "#{(millis * 1000).round(2)}µs"
-  end
+  str.to_s.gsub("\n", "<br>")
 end
 
 macro tov_render(filename)
-  render "src/ecr/#{{{filename}}}.ecr", "src/ecr/master.ecr"
+  render "src/ecr/#{{{filename}}}.ecr", "src/ecr/layout.ecr"
+end
+
+def make_cap
+  Random::Secure.urlsafe_base64
 end
 
 def pluralize(count, singular, plural = nil)
@@ -117,20 +114,20 @@ def valid_password(kind, id, username, password)
 end
 
 # TODO add testing to verify, passed some manual tests.
-# Input: All Ballot votes in the form of "Candidate" => Ranking No. (String due to DB)
+# Input: All Ballot votes in the form of "Candidate" => Ranking No.
 # Output: Candidate order in the form of "Candidate" => Other paths beat
 #         The candidate with the highest number wins.
-def calculate_schulze_order(preferences : Array(Hash(String, String))) : Hash(String, Int32)
+def calculate_schulze_order(preferences : Array(Hash(Int64, Int64))) : Hash(Int64, Int32)
   raise "Unreachable" if preferences.empty?
   candidates = preferences[0].keys
 
   # build pairwise preferences table
-  pairwise_preferences = Hash(String, Hash(String, Int64)).new(Hash(String, Int64).new(0))
+  pairwise_preferences = Hash(Int64, Hash(Int64, Int64)).new(Hash(Int64, Int64).new(0))
   candidates.each do |candidate|
-    candidate_preferences = Hash(String, Int64).new(0)
+    candidate_preferences = Hash(Int64, Int64).new(0)
     preferences.each do |vote|
       vote.to_a.each do |vote_candidate, vote_order|
-        candidate_preferences[vote_candidate] += 1 if vote_order.to_i > vote[candidate].to_i
+        candidate_preferences[vote_candidate] += 1 if vote_order > vote[candidate]
       end
     end
     pairwise_preferences[candidate] = candidate_preferences
@@ -138,11 +135,11 @@ def calculate_schulze_order(preferences : Array(Hash(String, String))) : Hash(St
 
   # calculate path strengths with an adapted floyd-warshall algorithm
   # ported from wikipedia: https://en.wikipedia.org/w/index.php?title=Schulze_method&oldid=940574379#Implementation
-  path_strengths = Hash(String, Hash(String, Int64)).new(Hash(String, Int64).new(0))
+  path_strengths = Hash(Int64, Hash(Int64, Int64)).new(Hash(Int64, Int64).new(0))
   candidates.each do |i|
     candidates.each do |j|
       next if i == j
-      path_strengths[i] = Hash(String, Int64).new(0) unless path_strengths[i]?
+      path_strengths[i] = Hash(Int64, Int64).new(0) unless path_strengths[i]?
       if pairwise_preferences[i][j] > pairwise_preferences[j][i]
         path_strengths[i][j] = pairwise_preferences[i][j]
       else

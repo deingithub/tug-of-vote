@@ -1,22 +1,25 @@
+NO_VOTES = [] of Vote
+
 def gen_poll(cap)
-  og_desc = ""
-  case cap.kind
-  when CapKind::PollAdmin
-    og_desc = "You were supposed to keep this link private, s m h"
-  when CapKind::PollVote
-    og_desc = "Participate in this poll on Tug of Vote"
-  else
-    og_desc = "View this poll on Tug of Vote"
-  end
+  og_desc = case cap.kind
+            when CapKind::PollAdmin
+              "You were supposed to keep this link private, s m h"
+            when CapKind::PollVote
+              "Participate in this poll on Tug of Vote"
+            else
+              "View this poll on Tug of Vote"
+            end
+
   poll = DATABASE.query_all("select * from polls where id = ?", cap.poll_id, as: Poll)[0]
 
   if (
        poll.duration &&
        (cap.kind == CapKind::PollVote || cap.kind == CapKind::PollAdmin) &&
-       Time.parse_utc(poll.created_at, "%F %H:%M:%S") + Time::Span.new(poll.duration.not_nil!, 0, 0) <= Time.utc
+       (poll.created_at + poll.duration.not_nil!) <= Time.utc
      )
     DATABASE.exec("update caps set kind = 3 where kind = 4 and poll_id = ?", cap.poll_id)
-    LOG.info("poll##{cap.poll_id}: #{cap.cap_slug} auto-closed voting")
+    Log.info &.emit("auto-closed poll", id: cap.ballot_id, slug: cap.cap_slug)
+
     if cap.kind == CapKind::PollVote
       cap.kind = CapKind::PollVoteDisabled
       gen_poll(cap)
@@ -24,16 +27,20 @@ def gen_poll(cap)
   end
 
   close_timestamp = nil
-  if poll.duration
-    close_timestamp = (Time.parse_utc(poll.created_at, "%F %H:%M:%S") + Time::Span.new(poll.duration.not_nil!, 0, 0)).to_unix_ms
-  end
-
-  votes = DATABASE.query_all("select * from votes where poll_id = ?", cap.poll_id, as: Vote)
+  close_timestamp = (poll.created_at + poll.duration.not_nil!).to_unix_ms if poll.duration
+  anonymize = cap.kind == CapKind::PollViewAnon
   lower_caps = DATABASE.query_all("select * from caps where poll_id = ? and kind <= ? and kind > ?", cap.poll_id, cap.kind_val, CapKind::Revoked.value, as: Cap)
 
-  pro_votes = {votes.select { |x| x.kind == VoteKind::InFavor && !x.reason.empty? }, votes.select { |x| x.kind == VoteKind::InFavor && x.reason.empty? }}
-  neu_votes = {votes.select { |x| x.kind == VoteKind::Neutral && !x.reason.empty? }, votes.select { |x| x.kind == VoteKind::Neutral && x.reason.empty? }}
-  con_votes = {votes.select { |x| x.kind == VoteKind::Against && !x.reason.empty? }, votes.select { |x| x.kind == VoteKind::Against && x.reason.empty? }}
-  anonymize = cap.kind == CapKind::PollViewAnon
+  votes = DATABASE.query_all("select * from votes where poll_id = ?", cap.poll_id, as: Vote)
+
+  pro_votes = votes.select { |v| v.kind == VoteKind::InFavor }.group_by { |v| v.reason.empty? }
+  pro_votes = {pro_votes[false]? || NO_VOTES, pro_votes[true]? || NO_VOTES}
+
+  neu_votes = votes.select { |v| v.kind == VoteKind::Neutral }.group_by { |v| v.reason.empty? }
+  neu_votes = {neu_votes[false]? || NO_VOTES, neu_votes[true]? || NO_VOTES}
+
+  con_votes = votes.select { |v| v.kind == VoteKind::Against }.group_by { |v| v.reason.empty? }
+  con_votes = {con_votes[false]? || NO_VOTES, con_votes[true]? || NO_VOTES}
+
   tov_render "cap_poll"
 end

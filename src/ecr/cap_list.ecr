@@ -37,7 +37,7 @@
   </ul>
   <p class="object-metadata">
     Created at <%= list.created_at %>.<br>
-    <%= 
+    <%=
       lower_caps
       .sort_by{|cap| cap.kind }
       .reverse
@@ -73,7 +73,10 @@
       </form>
       <form action="/cap/<%= cap.cap_slug %>/list/append" method="POST">
         <label for="cap_url">Append Link</label>
-        <input id="cap_url" placeholder="<%= BASE_URL %>/cap/…" name="cap_url" pattern="(<%= BASE_URL%>/cap/)?[a-zA-Z0-9\-_]+">
+        <input
+          id="cap_url" placeholder="<%= ENV["INSTANCE_BASE_URL"] %>/cap/…"
+          name="cap_url" pattern="(<%= ENV["INSTANCE_BASE_URL"] %>/cap/)?[a-zA-Z0-9\-_]+"
+        >
         <button>Append to List</button>
       </form>
     </div>
