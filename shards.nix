@@ -5,6 +5,12 @@
     rev = "v0.10.1";
     sha256 = "03c5h14z6h2mxnx949lihnyqjd19hcj38iasdwq9fp95h8cld376";
   };
+  dotenv = {
+    owner = "gdotdesign";
+    repo = "cr-dotenv";
+    rev = "v1.0.0";
+    sha256 = "00pdawysns1w1iqwh6j3shilpwh41ljz1chsqkacn6dj2yn21n0r";
+  };
   exception_page = {
     owner = "crystal-loot";
     repo = "exception_page";
