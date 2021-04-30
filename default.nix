@@ -8,6 +8,8 @@ crystal.buildCrystalPackage rec {
   pname = "TugOfVote";
   src = ./.;
 
+  format = "crystal";
+
   shardsFile = ./shards.nix;
   crystalBinaries.TugOfVote.src = "src/TugOfVote.cr";
   crystalBinaries.TugOfVote.options = [];

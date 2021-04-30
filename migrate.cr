@@ -189,7 +189,7 @@ DB.open "sqlite3:./tugofvote.db" do |db|
     SQL
 
     c.exec("PRAGMA foreign_key_check")
-    c.exec("VACUUM")
     puts "should be ok"
   end
+  db.exec("VACUUM")
 end
