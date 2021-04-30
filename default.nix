@@ -1,6 +1,6 @@
 with import (builtins.fetchTarball {
-  url = "https://github.com/NixOS/nixpkgs/tarball/b67bc34d4e3de1e89b8bb7cd6e375ba44f1ae8ca";
-  sha256 = "1q9a64bl5afflgpa2iaw1q7z7s08c8xq9w6lndlnc5c3siajrp8v";
+  url = "https://github.com/NixOS/nixpkgs/tarball/befefe6f3f202c9945e9e8370422e0837339e7ae";
+  sha256 = "17xpwz0fvz8kwniig7mkqi2grrppny4d4pl5dg28p49ahzmhp7r4";
 }) {};
 
 crystal.buildCrystalPackage rec {
