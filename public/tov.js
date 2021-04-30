@@ -248,18 +248,6 @@ function toggleRevEditing(status) {
 }
 
 function changeTheme(selected) {
-    const num_themes = 2;
     window.localStorage["theme"] = selected;
-    const theme_start_index = document.styleSheets[0].cssRules.length - num_themes - 1;
-    var index = 0;
-    for (rule of document.styleSheets[0].cssRules) {
-        if (index < theme_start_index) { index++; continue; }
-
-        if (selected > 0 && index == theme_start_index + selected) {
-            rule.conditionText = "screen";
-        } else {
-            rule.conditionText = "not all";
-        }
-        index++;
-    }
+    document.querySelector("body").className = `theme-${selected}`;
 }
