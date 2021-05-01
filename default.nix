@@ -14,6 +14,7 @@ crystal.buildCrystalPackage rec {
   crystalBinaries.TugOfVote.options = [];
 
   doCheck = false;
+  doInstallCheck = false;
 
   buildInputs = [ sqlite-interactive.dev openssl.dev ];
 }
