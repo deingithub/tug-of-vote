@@ -9,10 +9,11 @@ crystal.buildCrystalPackage rec {
   src = ./.;
 
   format = "crystal";
-
   shardsFile = ./shards.nix;
   crystalBinaries.TugOfVote.src = "src/TugOfVote.cr";
   crystalBinaries.TugOfVote.options = [];
+
+  doCheck = false;
 
   buildInputs = [ sqlite-interactive.dev openssl.dev ];
 }
