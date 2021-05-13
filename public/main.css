@@ -465,6 +465,9 @@ body.theme-1 .object-actions h2,
 .theme-1.poll-results ul li blockquote cite {
   background-color: #333;
 }
+.theme-1 address {
+  color: #16161d;
+}
 body.theme-1 a {
   color: #f0f0f0;
 }
