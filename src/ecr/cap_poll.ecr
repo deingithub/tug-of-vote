@@ -55,9 +55,11 @@
     <%- end -%>
     <br>
     <%- if cap.kind == CapKind::PollVoteDisabled -%>
+    <noscript>
     Voting has ended. You can only view the results now.<br>
+    </noscript>
     <%- end -%>
-    <%= 
+    <%=
       lower_caps
       .sort_by{|cap| cap.kind }
       .reverse
@@ -93,7 +95,7 @@
       </form>
     </div>
   <%- end -%>
-  
+
   <%- if cap.kind == CapKind::PollAdmin -%>
     <div class="admin">
       <h2>Admin</h2>

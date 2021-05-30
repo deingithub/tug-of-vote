@@ -10,13 +10,13 @@
     <%- if list_cap -%>
       <input type="hidden" name="listcap" value="<%= list_cap.cap_slug %>">
     <%- end -%>
-    <label for="title">Title:</label>
+    <label for="title">Title</label>
     <input name="title" id="title" required maxlength="200">
-    <label for="text-description">Detailed description:</label>
+    <label for="text-description">Detailed description</label>
     <textarea name="description" id="text-description" maxlength="20000"></textarea>
-    <label for="text-candidates">Candidates, one per line:</label>
+    <label for="text-candidates">Candidates, one per line</label>
     <textarea name="candidates" id="text-candidates" required maxlength="2000"></textarea>
-    <label for="duration">Ballot Duration:</label>
+    <label for="duration">Ballot duration</label>
     <select id="duration" name="duration">
       <option value="nil">Indefinite</option>
       <option value="1">1 hour</option>

@@ -10,11 +10,11 @@
     <%- if list_cap -%>
       <input type="hidden" name="listcap" value="<%= list_cap.cap_slug %>">
     <%- end -%>
-    <label for="title">Title:</label>
+    <label for="title">Title</label>
     <input name="title" id="title" required maxlength="200">
-    <label for="text-description">Your Proposal:</label>
+    <label for="text-description">Your proposal</label>
     <textarea name="description" id="text-description" required maxlength="20000"></textarea>
-    <label for="duration">Poll Duration:</label>
+    <label for="duration">Poll duration</label>
     <select id="duration" name="duration">
       <option value="nil">Indefinite</option>
       <option value="1">1 hour</option>

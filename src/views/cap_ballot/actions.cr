@@ -77,10 +77,10 @@ post "/cap/:cap_slug/ballot/update" do |env|
 
   fail(403, "Unauthorized.") if cap_data.nil? || cap_data.kind != CapKind::BallotAdmin
 
-  title = HTML.escape(env.params.body["title"].as(String))
+  title, description = HTML.escape(env.params.body["title"].as(String)), HTML.escape(env.params.body["description"].as(String))
   validate_checks(validate_title(title))
 
-  DATABASE.exec("update ballots set title = ? where id = ?", title, cap_data.ballot_id)
+  DATABASE.exec("update ballots set title = ?, description = ? where id = ?", title, description, cap_data.ballot_id)
   Log.info &.emit("updated ballot", id: cap_data.ballot_id, cap: cap_data.cap_slug)
 
   env.redirect "/cap/#{env.params.url["cap_slug"]}"

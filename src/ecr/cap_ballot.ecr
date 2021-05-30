@@ -40,7 +40,9 @@
     </span>
     <%- end -%>
     <%- if cap.kind == CapKind::BallotVoteDisabled -%>
+    <noscript>
     Voting has ended. You can only view the results now.
+    </noscript>
     <%- end -%>
     <br>
     <%=
@@ -108,6 +110,8 @@
       <form action="/cap/<%= cap.cap_slug %>/ballot/update" method="post">
         <label for="edit-ballot-title">Edit title</label>
         <input id="edit-ballot-title" name="title" value="<%= ballot.title %>" required maxlength="200">
+        <label for="edit-ballot-textarea">Edit description</label>
+        <textarea id="edit-ballot-textarea" name="description" required maxlength="20000"><%= ballot.description %></textarea>
         <button>Update ballot</button>
       </form>
     </div>
