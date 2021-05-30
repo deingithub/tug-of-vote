@@ -12,7 +12,9 @@
     <%- end -%>
     <label for="title">Title:</label>
     <input name="title" id="title" required maxlength="200">
-    <label for="text-candidates">Candidates (one per line):</label>
+    <label for="text-description">Detailed description:</label>
+    <textarea name="description" id="text-description" maxlength="20000"></textarea>
+    <label for="text-candidates">Candidates, one per line:</label>
     <textarea name="candidates" id="text-candidates" required maxlength="2000"></textarea>
     <label for="duration">Ballot Duration:</label>
     <select id="duration" name="duration">

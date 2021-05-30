@@ -189,6 +189,7 @@ class Ballot
     duration:      {type: Time::Span, nilable: true, converter: HoursToTimeSpan},
     cached_result: Hash(Int64, Int64),
     hide_names:    Bool,
+    description: String,
   })
 end
 

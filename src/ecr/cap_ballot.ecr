@@ -11,6 +11,8 @@
 
 <section class="ballot-results">
   <h2><%= ballot.title %></h2>
+  <p><%= content_to_html(ballot.description) %></p>
+  <hr>
   <p>
     Current results, calculated according to <a href="https://en.wikipedia.org/wiki/Schulze_Method" rel="noreferrer">Schulze</a>
     with <%= pluralize(votes.size, "vote") %>:

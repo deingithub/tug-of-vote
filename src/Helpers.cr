@@ -33,10 +33,14 @@ def validate_reason(str)
   return ""
 end
 
-def validate_content(str)
-  return "Content may not be empty. " if str.empty?
+def validate_optional_content(str)
   return "Content may not exceed 99907 characters (currently #{str.size}). " if str.size > 99907
   return ""
+end
+
+def validate_content(str)
+  return "Content may not be empty. " if str.empty?
+  return validate_optional_content(str)
 end
 
 def validate_title(str)

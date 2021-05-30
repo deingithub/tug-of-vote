@@ -52,7 +52,7 @@ post "/new_list" do |env|
 end
 
 post "/new_ballot" do |env|
-  title, candidates_str, duration = HTML.escape(env.params.body["title"].as(String)), HTML.escape(env.params.body["candidates"].as(String)), env.params.body["duration"].to_i?
+  title, description, candidates_str, duration = HTML.escape(env.params.body["title"].as(String)), HTML.escape(env.params.body["description"].as(String)), HTML.escape(env.params.body["candidates"].as(String)), env.params.body["duration"].to_i?
 
   # clean up candidates: split on lines, trim whitespace, remove empties and only keep unique names
   candidates = candidates_str.split("\n").map(&.strip).reject(&.empty?).uniq.sort
@@ -63,7 +63,8 @@ post "/new_ballot" do |env|
   validate_checks(
     validate_title(title),
     validate_candidate_list(candidates),
-    validate_duration(duration)
+    validate_duration(duration),
+    validate_optional_content(description)
   )
 
   admin_cap = make_cap()
@@ -71,12 +72,13 @@ post "/new_ballot" do |env|
   DATABASE.transaction do |trans|
     c = trans.connection
     ballot_id = c.exec(
-      "insert into ballots (title, candidates, duration, cached_result, hide_names) values (?, ?, ?, ?, ?)",
+      "insert into ballots (title, candidates, duration, cached_result, hide_names, description) values (?, ?, ?, ?, ?, ?)",
       title,
       candidates.to_json,
       duration,
       (0...candidates.size).map { |n| {n, 1} }.to_h.to_json,
-      hide_names
+      hide_names,
+      description
     ).last_insert_id
     c.exec("insert into caps (cap_slug, kind, ballot_id) values (?,?,?)", admin_cap, CapKind::BallotAdmin.value, ballot_id)
     c.exec("insert into caps (cap_slug, kind, ballot_id) values (?,?,?)", vote_cap, CapKind::BallotVote.value, ballot_id)
